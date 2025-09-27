@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MealCloud — Plans & Menus</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --black:#000;
+      --white:#fff;
+      --accent-yellow:#ffcc00;
+      --muted:#6c757d;
+      --bg-light:#f8f9fa;
+      --primary:#0d6efd;
+      --card-bg:#ffffff;
+      --alert-red:#cc2f42;
+    }
+    body{ font-family: 'Inter', sans-serif; background:var(--bg-light); color:var(--black); }
+    .navbar-brand img{ max-height:40px; }
+    .page-hero{ padding:48px 0; text-align:center; }
+    .page-hero h1{ font-size:2.25rem; font-weight:700; }
+    .page-hero p{ color:var(--muted); margin-bottom:0.5rem; }
+    .plans-grid .card{ border-radius:12px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:none; background:var(--card-bg); }
+    .food-plan-rate{ font-size:2.5rem; font-weight:800; margin:0; }
+    .food-plan-month{ color:var(--muted); margin-bottom:14px; font-weight:600; }
+    .food-plan-ul{ list-style: disc; padding-left:18px; text-align:left; color:#333; margin-bottom:16px; }
+    .cta-row{ text-align:center; margin-top:20px; }
+    .register-button{ background:var(--primary); color:var(--white); padding:10px 18px; border-radius:8px; border:none; font-weight:600; }
+    .customize-button{ background:transparent; border:2px solid rgba(0,0,0,0.08); padding:8px 16px; border-radius:8px; }
+    .viewmenu-button{ background:transparent; border:1px dashed rgba(0,0,0,0.12); padding:8px 14px; border-radius:8px; margin-left:8px; }
+    .text-yellow{ color:var(--accent-yellow); }
+    .footer{ background:#101010; color:#fff; padding:40px 0; margin-top:48px; }
+    .menu-section h6{ font-weight:700; margin-top:8px; }
+    .menu-item{ margin-bottom:6px; }
+    @media(min-width:992px){
+      .plans-grid .card { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt="MealCloud"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
+        <li class="nav-item"><a class="nav-link active" href="plans.html">Plans</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <h1>Our <span class="text-yellow">Food Plans</span></h1>
+    <p>Choose a plan that fits your appetite — weekly and monthly subscription options with authentic Indian cuisine.</p>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="container plans-grid pb-5">
+  <div class="row g-4">
+    <!-- Plan 1: ₹999 Per Week (7 veg days) -->
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body d-flex flex-column">
+          <h3 class="food-plan-rate">₹999</h3>
+          <h5 class="food-plan-month">Per Week</h5>
+          <ul class="food-plan-ul mb-3">
+            <li>7 veg days</li>
+            <li>For vegetarians</li>
+          </ul>
+          <div class="mt-auto">
+            <!-- Plan 1 (₹999) -->
+<button class="register-button subscribe-btn"
+        data-plan-id="veg_week"
+        data-amount="99900"
+        data-description="7 veg days weekly plan (₹999/week)">
+  Subscribe
+</button>
+
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegWeekModal">View Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan 2: ₹2,999 Per Week (4 veg + 3 nonveg) -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body d-flex flex-column">
+          <h3 class="food-plan-rate">₹2,999</h3>
+          <h5 class="food-plan-month">Per Week</h5>
+          <ul class="food-plan-ul mb-3">
+            <li>4 veg days</li>
+            <li>3 nonveg days</li>
+          </ul>
+          <div class="mt-auto">
+            <!-- Plan 2 (₹2,999) -->
+<button class="register-button subscribe-btn"
+        data-plan-id="mixed_week"
+        data-amount="299900"
+        data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)">
+  Subscribe
+</button>
+
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuMixedWeekModal">View Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan 3: ₹3,999 Per Month (30 veg days) -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body d-flex flex-column">
+          <h3 class="food-plan-rate">₹3,999</h3>
+          <h5 class="food-plan-month">Per Month</h5>
+          <ul class="food-plan-ul mb-3">
+            <li>30 veg days</li>
+            <li>For vegetarians</li>
+          </ul>
+          <div class="mt-auto">
+            <!-- Plan 3 (₹3,999) -->
+<button class="register-button subscribe-btn"
+        data-plan-id="veg_month"
+        data-amount="399900"
+        data-description="30 veg days monthly plan (₹3,999/month)">
+  Subscribe
+</button>
+
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegMonthModal">View Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan 4: ₹5,999 Per Month (30 non days / Other Plans) -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card text-center">
+        <div class="card-body d-flex flex-column">
+          <h3 class="food-plan-rate">₹5,999</h3>
+          <h5 class="food-plan-month">Per Month</h5>
+          <ul class="food-plan-ul mb-3">
+            <li>30 non-veg days</li>
+            <li>Other plans available</li>
+          </ul>
+          <div class="mt-auto">
+            <!-- Plan 4 (₹5,999) -->
+<button class="register-button subscribe-btn"
+        data-plan-id="nonveg_month"
+        data-amount="599900"
+        data-description="30 non-veg days monthly plan (₹5,999/month)">
+  Subscribe
+</button>
+
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuNonvegMonthModal">View Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA / note -->
+  <div class="row">
+    <div class="col-12 cta-row">
+      <p class="mt-4">Not sure which plan fits? <button class="customize-button ms-2">Customize Plan</button></p>
+    </div>
+  </div>
+</section>
+
+<!-- MENU MODALS -->
+
+<!-- Veg Weekly Modal -->
+<div class="modal fade" id="menuVegWeekModal" tabindex="-1" aria-labelledby="menuVegWeekLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuVegWeekLabel">Sample Menu — ₹999 / Week (7 veg days)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Below is a sample daily menu for the Vegetarian Weekly Plan. Each day will have variations — this shows representative items from South, North & regional Indian cuisine.</p>
+
+        <div class="menu-section">
+          <h6>Breakfast</h6>
+          <div class="menu-item">Idli + Sambar + Coconut Chutney</div>
+          <div class="menu-item">Masala Dosa / Plain Dosa</div>
+          <div class="menu-item">Poha with roasted peanuts</div>
+          <div class="menu-item">Paratha (Aloo / Paneer) with curd & pickle</div>
+
+          <h6>Lunch</h6>
+          <div class="menu-item">Steamed rice / Jeera rice</div>
+          <div class="menu-item">Dal tadka</div>
+          <div class="menu-item">Seasonal vegetable curry (ex: Aloo Gobi / Bhindi masala)</div>
+          <div class="menu-item">Raita or salad</div>
+
+          <h6>Evening Snack</h6>
+          <div class="menu-item">Samosa or Medu Vada</div>
+          <div class="menu-item">Chai / Masala chai</div>
+
+          <h6>Dinner</h6>
+          <div class="menu-item">Chapati / Phulka</div>
+          <div class="menu-item">Paneer butter masala / Chole</div>
+          <div class="menu-item">Simple vegetable sabzi</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="register-button">Subscribe to this Plan</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mixed Week Modal (4 veg + 3 nonveg) -->
+<div class="modal fade" id="menuMixedWeekModal" tabindex="-1" aria-labelledby="menuMixedWeekLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuMixedWeekLabel">Sample Menu — ₹2,999 / Week (4 veg + 3 non-veg days)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Sample rotation combining vegetarian and non-vegetarian Indian dishes.</p>
+
+        <div class="menu-section">
+          <h6>Veg Day Example</h6>
+          <div class="menu-item">Breakfast: Upma / Idli</div>
+          <div class="menu-item">Lunch: Rice, Dal, Mix Veg, Curd</div>
+          <div class="menu-item">Snack: Pakoras + Tea</div>
+          <div class="menu-item">Dinner: Chapati + Paneer Bhurji</div>
+
+          <h6>Non-Veg Day Example</h6>
+          <div class="menu-item">Breakfast: Egg bhurji with toast or omelette</div>
+          <div class="menu-item">Lunch: Rice, Chicken curry (home-style), Dal</div>
+          <div class="menu-item">Snack: Masala peanuts/banana</div>
+          <div class="menu-item">Dinner: Fish fry with chapati / Egg curry</div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="register-button">Subscribe to this Plan</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Veg Monthly Modal -->
+<div class="modal fade" id="menuVegMonthModal" tabindex="-1" aria-labelledby="menuVegMonthLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuVegMonthLabel">Sample Menu — ₹3,999 / Month (30 veg days)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Monthly Veg plan sample — rotating regional menus ensure variety every day.</p>
+
+        <div class="menu-section">
+          <h6>Weekly Rotation (examples)</h6>
+          <div class="menu-item"><strong>Week 1:</strong> South Indian focus — Idli, Dosa, Sambar, Rasam, Coconut chutney, Vegetable kurma</div>
+          <div class="menu-item"><strong>Week 2:</strong> North Indian focus — Parathas, Rajma, Chole, Paneer dishes, Mixed veg</div>
+          <div class="menu-item"><strong>Week 3:</strong> Maharashtrian / Gujarati — Poha, Thepla, Dal, Kadhi, Seasonal sabzi</div>
+          <div class="menu-item"><strong>Week 4:</strong> Bengali / Hyderabadi touches — Veg biryani (veg), dal, bharta/extras</div>
+
+          <h6>Snacks & Extras</h6>
+          <div class="menu-item">Seasonal fruit once/week, curd/raita, occasional sweets (gulab jamun / kheer)</div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="register-button">Subscribe to this Plan</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Non-Veg Monthly Modal -->
+<div class="modal fade" id="menuNonvegMonthModal" tabindex="-1" aria-labelledby="menuNonvegMonthLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuNonvegMonthLabel">Sample Menu — ₹5,999 / Month (30 non-veg days)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Non-veg monthly plan sample — a daily non-veg main (chicken, egg, fish or mutton) with supporting veg sides and staples.</p>
+
+        <div class="menu-section">
+          <h6>Typical Day (example)</h6>
+          <div class="menu-item"><strong>Breakfast:</strong> Egg omelette / Egg bhurji OR paratha with curd</div>
+          <div class="menu-item"><strong>Lunch:</strong> Steamed rice / Biryani (1–2 days per week), Chicken curry / Mutton curry / Fish curry, Dal, Seasonal veg</div>
+          <div class="menu-item"><strong>Snack:</strong> Cut fruit / Tea & savory</div>
+          <div class="menu-item"><strong>Dinner:</strong> Chapati / Rice with Egg curry / Fish fry / Light chicken sabzi</div>
+
+          <h6>Weekly Highlights</h6>
+          <div class="menu-item">Weekend special: Hyderabadi chicken biryani or fish fry; weekday favorites: chicken curry, egg curry, fish curry.</div>
+
+          <h6>Notes</h6>
+          <div class="menu-item">All non-veg items prepared fresh; portion and spice levels can be customized when ordering.</div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="register-button">Subscribe to this Plan</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 text-md-start text-center">
+        <h5>Enjoy your <span class="text-yellow">Delicious Food</span></h5>
+        <p class="mb-0">support@SuraMess.com • 999999999</p>
+      </div>
+      <div class="col-md-6 text-md-end text-center mt-3 mt-md-0">
+        <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
