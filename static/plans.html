@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     :root{
       --black:#000;
@@ -17,36 +18,63 @@
       --primary:#0d6efd;
       --card-bg:#ffffff;
       --alert-red:#cc2f42;
+      --success-green:#28a745;
     }
     body{ font-family: 'Inter', sans-serif; background:var(--bg-light); color:var(--black); }
     /* Add background image to the body */
     body {
-      
-      background-image: url("static/images/Main-Background.png");
-      background-size: cover; /* Covers the entire area */
+      background-image: url("images/Main-Background.png");
+      background-size: cover;
       background-repeat: no-repeat;
-      background-position: center; /* Centers the image */
-      background-attachment: fixed; /* Keeps image fixed while scrolling */
+      background-position: center;
+      background-attachment: fixed;
     }
 
     .navbar-brand img{ max-height:40px; }
     .page-hero{ padding:48px 0; text-align:center; }
     .page-hero h1{ font-size:2.25rem; font-weight:700; }
     .page-hero p{ color:var(--muted); margin-bottom:0.5rem; }
-    .plans-grid .card{ border-radius:12px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:none; background:var(--card-bg); }
+    .plans-grid .card{ border-radius:12px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:none; background:var(--card-bg); transition: transform 0.2s; }
+    .plans-grid .card:hover{ transform: translateY(-5px); }
     .food-plan-rate{ font-size:2.5rem; font-weight:800; margin:0; }
     .food-plan-month{ color:var(--muted); margin-bottom:14px; font-weight:600; }
     .food-plan-ul{ list-style: disc; padding-left:18px; text-align:left; color:#333; margin-bottom:16px; }
     .cta-row{ text-align:center; margin-top:20px; }
-    .register-button{ background:var(--primary); color:var(--white); padding:10px 18px; border-radius:8px; border:none; font-weight:600; }
-    .customize-button{ background:transparent; border:2px solid rgba(0,0,0,0.08); padding:8px 16px; border-radius:8px; }
-    .viewmenu-button{ background:transparent; border:1px dashed rgba(0,0,0,0.12); padding:8px 14px; border-radius:8px; margin-left:8px; }
+    .register-button{ background:var(--primary); color:var(--white); padding:10px 18px; border-radius:8px; border:none; font-weight:600; cursor: pointer; transition: background-color 0.2s; }
+    .register-button:hover{ background:#0056b3; }
+    .register-button:disabled{ background:#6c757d; cursor: not-allowed; }
+    .customize-button{ background:transparent; border:2px solid rgba(0,0,0,0.08); padding:8px 16px; border-radius:8px; cursor: pointer; }
+    .viewmenu-button{ background:transparent; border:1px dashed rgba(0,0,0,0.12); padding:8px 14px; border-radius:8px; margin-left:8px; cursor: pointer; }
     .text-yellow{ color:var(--accent-yellow); }
     .footer{ background:#101010; color:#fff; padding:40px 0; margin-top:48px; }
     .menu-section h6{ font-weight:700; margin-top:8px; }
     .menu-item{ margin-bottom:6px; }
+
+    /* Customer Info Modal Styles */
+    .customer-modal .form-control{ margin-bottom: 15px; }
+    .alert{ margin-top: 10px; }
+    
+    /* Loading state */
+    .btn-loading{ position: relative; }
+    .btn-loading::after{
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s ease infinite;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+    @keyframes spin{ 0%{ transform: rotate(0deg); } 100%{ transform: rotate(360deg); } }
+
     @media(min-width:992px){
-      .plans-grid .card { min-height: 260px; }
+      .plans-grid .card { min-height: 280px; }
     }
   </style>
 </head>
@@ -55,7 +83,6 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
   <div class="container">
-    <!-- <a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt="MealCloud"></a> -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -82,7 +109,6 @@
 <section class="container plans-grid pb-5">
   <div class="row g-4">
     <!-- Plan 1: ₹999 Per Week (7 veg days) -->
-
     <div class="col-md-6 col-lg-3">
       <div class="card text-center">
         <div class="card-body d-flex flex-column">
@@ -93,14 +119,12 @@
             <li>For vegetarians</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 1 (₹999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="veg_week"
-        data-amount="99900"
-        data-description="7 veg days weekly plan (₹999/week)">
-  Subscribe
-</button>
-
+            <button class="register-button subscribe-btn"
+                    data-plan-id="veg_week"
+                    data-amount="99900"
+                    data-description="7 veg days weekly plan (₹999/week)">
+              Subscribe
+            </button>
             <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegWeekModal">View Menu</button>
           </div>
         </div>
@@ -118,14 +142,12 @@
             <li>3 nonveg days</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 2 (₹2,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="mixed_week"
-        data-amount="299900"
-        data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)">
-  Subscribe
-</button>
-
+            <button class="register-button subscribe-btn"
+                    data-plan-id="mixed_week"
+                    data-amount="299900"
+                    data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)">
+              Subscribe
+            </button>
             <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuMixedWeekModal">View Menu</button>
           </div>
         </div>
@@ -143,14 +165,12 @@
             <li>For vegetarians</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 3 (₹3,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="veg_month"
-        data-amount="399900"
-        data-description="30 veg days monthly plan (₹3,999/month)">
-  Subscribe
-</button>
-
+            <button class="register-button subscribe-btn"
+                    data-plan-id="veg_month"
+                    data-amount="399900"
+                    data-description="30 veg days monthly plan (₹3,999/month)">
+              Subscribe
+            </button>
             <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegMonthModal">View Menu</button>
           </div>
         </div>
@@ -168,14 +188,12 @@
             <li>Other plans available</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 4 (₹5,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="nonveg_month"
-        data-amount="599900"
-        data-description="30 non-veg days monthly plan (₹5,999/month)">
-  Subscribe
-</button>
-
+            <button class="register-button subscribe-btn"
+                    data-plan-id="nonveg_month"
+                    data-amount="599900"
+                    data-description="30 non-veg days monthly plan (₹5,999/month)">
+              Subscribe
+            </button>
             <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuNonvegMonthModal">View Menu</button>
           </div>
         </div>
@@ -190,6 +208,30 @@
     </div>
   </div>
 </section>
+
+<!-- CUSTOMER INFO MODAL -->
+<div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered customer-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerModalLabel">Enter Your Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="customerForm">
+          <input type="text" class="form-control" id="customerName" placeholder="Full Name" required>
+          <input type="email" class="form-control" id="customerEmail" placeholder="Email Address" required>
+          <input type="tel" class="form-control" id="customerPhone" placeholder="Phone Number" required>
+        </form>
+        <div id="customerAlert" class="alert" style="display: none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="proceedPayment">Proceed to Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MENU MODALS -->
 
@@ -229,15 +271,16 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
+        <button class="register-button subscribe-btn"
+                data-plan-id="veg_week"
+                data-amount="99900"
+                data-description="7 veg days weekly plan (₹999/week)"
+                data-bs-dismiss="modal">Subscribe to this Plan</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
-
-<!-- Mixed Week Modal (4 veg + 3 nonveg) -->
-<!-- Veg Weekly Modal (already done, keeping it as it is) -->
 
 <!-- Mixed Weekly Modal (4 veg + 3 nonveg) -->
 <div class="modal fade" id="menuMixedWeekModal" tabindex="-1" aria-labelledby="menuMixedWeekLabel" aria-hidden="true">
@@ -265,7 +308,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
+        <button class="register-button subscribe-btn"
+                data-plan-id="mixed_week"
+                data-amount="299900"
+                data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)"
+                data-bs-dismiss="modal">Subscribe to this Plan</button>
         <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -296,7 +343,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
+        <button class="register-button subscribe-btn"
+                data-plan-id="veg_month"
+                data-amount="399900"
+                data-description="30 veg days monthly plan (₹3,999/month)"
+                data-bs-dismiss="modal">Subscribe to this Plan</button>
         <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -328,7 +379,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
+        <button class="register-button subscribe-btn"
+                data-plan-id="nonveg_month"
+                data-amount="599900"
+                data-description="30 non-veg days monthly plan (₹5,999/month)"
+                data-bs-dismiss="modal">Subscribe to this Plan</button>
         <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -353,5 +408,265 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Global variables
+let selectedPlan = {};
+let customerDetails = {};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to all subscribe buttons
+    document.querySelectorAll('.subscribe-btn').forEach(button => {
+        button.addEventListener('click', handleSubscribeClick);
+    });
+
+    // Add event listener to proceed payment button
+    document.getElementById('proceedPayment').addEventListener('click', handleProceedPayment);
+
+    // Add form validation
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleProceedPayment();
+    });
+});
+
+// Handle subscribe button click
+function handleSubscribeClick(event) {
+    const button = event.target;
+    
+    // Extract plan details from button attributes
+    selectedPlan = {
+        plan_id: button.getAttribute('data-plan-id'),
+        amount: parseInt(button.getAttribute('data-amount')),
+        description: button.getAttribute('data-description')
+    };
+
+    // Show customer info modal
+    const customerModal = new bootstrap.Modal(document.getElementById('customerModal'));
+    document.getElementById('customerModalLabel').textContent = `Subscribe to ${selectedPlan.description}`;
+    customerModal.show();
+}
+
+// Handle proceed to payment
+function handleProceedPayment() {
+    const name = document.getElementById('customerName').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+
+    // Basic validation
+    if (!name || !email || !phone) {
+        showAlert('Please fill in all fields', 'danger');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        showAlert('Please enter a valid email address', 'danger');
+        return;
+    }
+
+    if (!isValidPhone(phone)) {
+        showAlert('Please enter a valid phone number', 'danger');
+        return;
+    }
+
+    // Store customer details
+    customerDetails = { name, email, phone };
+
+    // Start payment process
+    initiatePayment();
+}
+
+// Validate email
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Validate phone
+function isValidPhone(phone) {
+    return /^[6-9]\d{9}$/.test(phone);
+}
+
+// Show alert in customer modal
+function showAlert(message, type) {
+    const alertDiv = document.getElementById('customerAlert');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    alertDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        alertDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Initiate payment process
+async function initiatePayment() {
+    const proceedButton = document.getElementById('proceedPayment');
+    
+    try {
+        // Show loading state
+        proceedButton.disabled = true;
+        proceedButton.classList.add('btn-loading');
+        proceedButton.textContent = 'Processing...';
+
+        // Create order on server
+        const response = await fetch('/create_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                plan_id: selectedPlan.plan_id,
+                amount: selectedPlan.amount,
+                currency: 'INR',
+                description: selectedPlan.description,
+                customer: customerDetails
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create order');
+        }
+
+        const orderData = await response.json();
+
+        // Hide customer modal
+        bootstrap.Modal.getInstance(document.getElementById('customerModal')).hide();
+
+        // Launch Razorpay checkout
+        launchRazorpayCheckout(orderData);
+
+    } catch (error) {
+        console.error('Error creating order:', error);
+        showAlert('Failed to process payment. Please try again.', 'danger');
+    } finally {
+        // Reset button state
+        proceedButton.disabled = false;
+        proceedButton.classList.remove('btn-loading');
+        proceedButton.textContent = 'Proceed to Payment';
+    }
+}
+
+// Launch Razorpay checkout
+function launchRazorpayCheckout(orderData) {
+    const options = {
+        key: orderData.key,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'MealCloud',
+        description: selectedPlan.description,
+        order_id: orderData.order_id,
+        prefill: {
+            name: customerDetails.name,
+            email: customerDetails.email,
+            contact: customerDetails.phone
+        },
+        theme: {
+            color: '#0d6efd'
+        },
+        handler: function(response) {
+            handlePaymentSuccess(response);
+        },
+        modal: {
+            ondismiss: function() {
+                console.log('Payment cancelled by user');
+            }
+        }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+}
+
+// Handle successful payment
+async function handlePaymentSuccess(response) {
+    try {
+        // Verify payment on server
+        const verifyResponse = await fetch('/verify_payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                plan_id: selectedPlan.plan_id,
+                customer: customerDetails
+            })
+        });
+
+        const verifyData = await verifyResponse.json();
+
+        if (verifyData.success) {
+            // Payment successful
+            showSuccessMessage();
+        } else {
+            // Payment verification failed
+            showErrorMessage('Payment verification failed. Please contact support.');
+        }
+
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+        showErrorMessage('Payment verification failed. Please contact support.');
+    }
+}
+
+// Show success message
+function showSuccessMessage() {
+    // Create success modal
+    const successHTML = `
+        <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                        <h4 class="mt-3">Payment Successful!</h4>
+                        <p>Thank you for subscribing to our ${selectedPlan.description}. You will receive a confirmation email shortly.</p>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', successHTML);
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+    
+    // Remove modal after closing
+    document.getElementById('successModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}
+
+// Show error message
+function showErrorMessage(message) {
+    // Create error modal
+    const errorHTML = `
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-4">
+                        <i class="fas fa-exclamation-circle text-danger" style="font-size: 4rem;"></i>
+                        <h4 class="mt-3">Payment Failed</h4>
+                        <p>${message}</p>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', errorHTML);
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    errorModal.show();
+    
+    // Remove modal after closing
+    document.getElementById('errorModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}
+</script>
+
 </body>
-</html>

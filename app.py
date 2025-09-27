@@ -19,15 +19,13 @@ from email.message import EmailMessage
 # -----------------------
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.secret_key = os.environ.get("SECRET_KEY", "your-secret-key-here")
 
 BASE = os.path.abspath(os.path.dirname(__file__))
 STATIC = os.path.join(BASE, 'static')
 DB_PATH = os.environ.get("SQLITE_PATH", os.path.join(BASE, "app.db"))
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# STATIC = os.path.join()
-
 
 db = SQLAlchemy(app)
 
@@ -57,6 +55,7 @@ class Customer(db.Model):
     phone = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     orders = db.relationship("Order", backref="customer", lazy=True)
+    complaints = db.relationship("Complaint", backref="customer", lazy=True)
 
 class Order(db.Model):
     __tablename__ = "orders"
@@ -69,6 +68,20 @@ class Order(db.Model):
     razorpay_payment_id = db.Column(db.String(120), nullable=True, unique=True)
     razorpay_signature = db.Column(db.String(255), nullable=True)
     status = db.Column(db.String(40), nullable=False, default="created") # created, paid, failed, fulfilled
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=True)
+
+class Complaint(db.Model):
+    __tablename__ = "complaints"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(180), nullable=False)
+    phone = db.Column(db.String(50), nullable=False)
+    place = db.Column(db.String(180), nullable=True)
+    category = db.Column(db.String(50), nullable=True)  # Breakfast, Lunch, Dinner
+    complaint_type = db.Column(db.String(50), nullable=True)  # Delivery, Food, Other
+    description = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(40), nullable=False, default="New")  # New, In Progress, Resolved
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=True)
@@ -102,12 +115,77 @@ def send_admin_email(subject: str, content: str):
         return False
 
 # -----------------------
-# Routes: frontend pages (optional)
+# Routes: frontend pages
 # -----------------------
 @app.route("/")
 def home():
-    # if you want, render a template. For now we'll redirect to index.html in static root
     return send_from_directory(STATIC, "index.html")
+
+@app.route("/plans")
+def plans():
+    return send_from_directory(STATIC, "plans.html")
+
+# -----------------------
+# API: Submit Complaint
+# -----------------------
+@app.route("/submit_complaint", methods=["POST"])
+def submit_complaint():
+    """
+    Handle complaint submission from the frontend form
+    """
+    data = request.get_json() or request.form.to_dict()
+    
+    name = data.get("Name")
+    phone = data.get("Phone")
+    place = data.get("Place")
+    category = data.get("Category")  # Breakfast, Lunch, Dinner
+    complaint_type = data.get("Complaint")  # Delivery, Food, Other
+    description = data.get("Description")
+    
+    if not name or not phone:
+        return jsonify({"error": "Name and phone are required"}), 400
+    
+    # Find or create customer
+    customer = Customer.query.filter_by(phone=phone).first()
+    if not customer:
+        customer = Customer(name=name, phone=phone)
+        db.session.add(customer)
+        db.session.commit()
+    
+    # Create complaint
+    complaint = Complaint(
+        name=name,
+        phone=phone,
+        place=place,
+        category=category,
+        complaint_type=complaint_type,
+        description=description,
+        customer_id=customer.id
+    )
+    
+    db.session.add(complaint)
+    db.session.commit()
+    
+    # Send notification email
+    subject = f"New Complaint Received - {complaint_type}"
+    content = f"""
+New complaint received:
+
+Name: {name}
+Phone: {phone}
+Place: {place}
+Category: {category}
+Type: {complaint_type}
+Description: {description}
+
+Complaint ID: {complaint.id}
+Time: {complaint.created_at}
+
+Please check the admin dashboard: /admin
+"""
+    send_admin_email(subject, content)
+    
+    return jsonify({"success": True, "message": "Complaint registered successfully"})
 
 # -----------------------
 # API: Create Razorpay order (server-side)
@@ -254,13 +332,13 @@ def verify_payment():
         db.session.commit()
 
     # Notify admin (optional email)
-    subject = f"New subscription paid — {o.plan_id} — {o.amount/100:.2f} {o.currency}"
+    subject = f"New subscription paid — {o.plan_id} — ₹{o.amount/100:.2f} {o.currency}"
     content = f"""
 A new payment has been received.
 
 Order DB id: {o.id}
 Plan: {o.plan_id}
-Amount: {o.amount/100:.2f} {o.currency}
+Amount: ₹{o.amount/100:.2f} {o.currency}
 Customer: {o.customer.name if o.customer else 'N/A'} ({o.customer.phone if o.customer else 'N/A'}, {o.customer.email if o.customer else 'N/A'})
 Razorpay Order ID: {order_id}
 Razorpay Payment ID: {pay_id}
@@ -303,7 +381,8 @@ def admin_required(f):
 @admin_required
 def admin_dashboard():
     orders = Order.query.order_by(Order.created_at.desc()).all()
-    return render_template("admin_dashboard.html", orders=orders)
+    complaints = Complaint.query.order_by(Complaint.created_at.desc()).all()
+    return render_template("admin_dashboard.html", orders=orders, complaints=complaints)
 
 @app.route("/admin/order/<int:order_id>/fulfill", methods=["POST"])
 @admin_required
@@ -312,6 +391,24 @@ def fulfill_order(order_id):
     o.status = "fulfilled"
     db.session.commit()
     flash("Order marked fulfilled", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/complaint/<int:complaint_id>/resolve", methods=["POST"])
+@admin_required
+def resolve_complaint(complaint_id):
+    c = Complaint.query.get_or_404(complaint_id)
+    c.status = "Resolved"
+    db.session.commit()
+    flash("Complaint marked as resolved", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/complaint/<int:complaint_id>/progress", methods=["POST"])
+@admin_required
+def progress_complaint(complaint_id):
+    c = Complaint.query.get_or_404(complaint_id)
+    c.status = "In Progress"
+    db.session.commit()
+    flash("Complaint marked as in progress", "success")
     return redirect(url_for("admin_dashboard"))
 
 # -----------------------
@@ -327,5 +424,5 @@ def initdb_cmd():
 # Run
 # -----------------------
 if __name__ == "__main__":
-    # init_db()  # optionally create DB on first run
+    init_db()  # create DB on first run
     app.run(debug=True, host="0.0.0.0", port=5000)
