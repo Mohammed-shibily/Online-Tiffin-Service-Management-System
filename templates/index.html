@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="eng"><head>
-    <title>MessWaala</title>
+<html lang="eng">
+<head>
+    <title>Meal Cloud</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,62 +12,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <script>
-      // $(document).ready(function () {
-      //   $(".main-section").hide();
-      //   $(".shutter-container").css("grid-gap", "0");
-      //   setTimeout(function () {
-      //     $(".shutter-container").css("grid-gap", "150vw");
-      //     $(".shutter-container").css("transition", "1.5s");
-      //     $("#mobileLogo").css("display", "block");
-      //     // $(".mobile-screen").css("display", "block");
-      //     $(".mobile-screen-img").animate(
-      //       {
-      //         width: "200px",
-      //         height: "200px",
-      //       },
-      //       1000,
-      //       function () {
-      //         $(".mobile-screen").fadeIn(800);
-      //         $(".shutter-box").fadeOut(3000, function () {
-      //           $(".main-section").fadeIn(800);
-      //         });
-      //       }
-      //     );
-      //   }, 1500);
-
-        // $('#exampleModal').on('shown.bs.modal', function () {
-        //     $('#vid')[0].play();
-        // })
-        // $('#exampleModal').on('hidden.bs.modal', function () {
-        //     $('#vid')[0].pause();
-        // })
-        // $('#vid')[0].pause();
-        // Get the modal
         var modal = document.getElementById("exampleModal");
-
-        // Get the button that opens the modal
         var btn = document.getElementById("btn_vid");
 
-        // When the user clicks the button, open the modal
-        btn.onclick = function () {
-          modal.style.display = "block";
-          document.getElementById("vid").play(); // <-- PLAY
-        };
-        // When the user clicks anywhere outside of the modal, close it
+        if (btn) {
+          btn.onclick = function () {
+            modal.style.display = "block";
+            document.getElementById("vid").play();
+          };
+        }
+        
         window.onclick = function (event) {
           if (event.target == modal) {
             modal.style.display = "none";
-            document.getElementById("vid").pause(); // <-- PAUSE
+            document.getElementById("vid").pause();
           }
         };
 
         var complaintModal = document.getElementById("complaintModal");
         var btn_comp = document.getElementById("btn_complaint");
 
-        btn_comp.onclick = function () {
-          complaintModal.style.display = "block";
-        };
-      
+        if (btn_comp) {
+          btn_comp.onclick = function () {
+            complaintModal.style.display = "block";
+          };
+        }
     </script>
     <style>
       .carousel-item {
@@ -98,17 +68,74 @@
       .shutter:nth-child(even) {
         background-color: #000;
       }
+      
+      /* Contact Modal Styles */
+      .contact-modal-body {
+        padding: 30px;
+      }
+      
+      .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+      
+      .contact-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+      
+      .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        font-size: 20px;
+        color: white;
+      }
+      
+      .contact-info {
+        flex: 1;
+      }
+      
+      .contact-label {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      
+      .contact-value {
+        font-size: 16px;
+        color: #212529;
+        font-weight: 500;
+      }
+      
+      .contact-value a {
+        color: #212529;
+        text-decoration: none;
+      }
+      
+      .contact-value a:hover {
+        color: #667eea;
+      }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     
     <section class="main-section">
       <div class="container-fluid main-header">
         <nav class="py-2 navbar navbar-expand-lg auto-hiding-navbar">
           <div class="container">
-            <!-- <a class="navbar-brand" href="./index.html">
-              <img class="logo" src="{{ url_for('static', filename='images/Messwaala_logo.svg') }}">
-            </a> -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <i class="fa-solid fa-bars"></i>
             </button>
@@ -117,43 +144,74 @@
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="about.html">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./features.html">Features</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./plans.html">Plans</a>
-                </li>
                 <!-- <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    data-bs-toggle="modal"
-                    data-bs-target="#complaintModal"
-                    >Complaint</a
-                  >
+                  <a class="nav-link" href="{{ url_for('about') }}">About Us</a>
                 </li> -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('plans')}}">Plans</a>
+                </li>
 
                 <li class="nav-item call-us-nav-item">
-                  <a href="tel: 9946 66 0012" class="download-button"><i class="fa-solid fa-phone"></i>Call Us</a>
+                  <a href="#" class="download-button" data-bs-toggle="modal" data-bs-target="#contactModal"><i class="fa-solid fa-phone"></i>Call Us</a>
                 </li>
                 <li class="nav-item call-us-nav-item" style="margin-top: 4px; padding-left: 5px">
-                  <!-- <button
-                    type="button"
-                    class="download-button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#complaintModal"
-                    id="btn_complaint"
-                  >
-                    <i class="fa-solid fa-person-circle-exclamation"></i
-                    >Complaint
-                  </button> -->
                 </li>
               </ul>
             </div>
           </div>
         </nav>
+
+        <!-- Contact Modal -->
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="contactModalLabel">Contact Us</h4>
+                <button type="button" class="close" style="border: none; background: none; font-size: 32px" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body contact-modal-body">
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <i class="fa-solid fa-phone"></i>
+                  </div>
+                  <div class="contact-info">
+                    <div class="contact-label">Phone Number</div>
+                    <div class="contact-value">
+                      <a href="tel:9946660012">9999999999</a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+                  <div class="contact-info">
+                    <div class="contact-label">Email Address</div>
+                    <div class="contact-value">
+                      <a href="mailto:support@SuraMess.com">support@MealCloud.com</a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </div>
+                  <div class="contact-info">
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">
+                      <a href="https://wa.me/919946660012" target="_blank">Chat with us</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- End Navbar -->
         <div class="container banner-content">
           <div class="row">
@@ -173,7 +231,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-body">
-                      <video width="100%" id="vid" height="100%" controls="" autoplay="">
+                      <video width="100%" id="vid" height="100%" controls autoplay>
                         <source src="{{ url_for('static', filename='media/mess wala-1080p-221118.mp4') }}" type="video/mp4">
                       </video>
                     </div>
@@ -209,7 +267,7 @@
               <div class="d-flex">
                 <button class="register-button">Register Now!</button>
                 <button type="button" class="video-button watch-button-mobile" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn_vid">
-                  <i class="fa-solid fa-video"></i> About MessWaala
+                  <i class="fa-solid fa-video"></i> 
                 </button>
               </div>
               <!-- Modal -->
@@ -217,7 +275,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-body">
-                      <video width="100%" id="vid" height="100%" controls="" autoplay="" muted="">
+                      <video width="100%" id="vid" height="100%" controls autoplay muted>
                         <source src="{{ url_for('static', filename='media/mess wala-1080p-221118.mp4') }}" type="video/mp4">
                       </video>
                     </div>
@@ -227,48 +285,8 @@
             </div>
           </div>
         </div>
-        <!-- <div
-          class="modal fade"
-          id="complaintModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-body">
-                <form action="/action_page.php">
-                  <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" />
-                  </div>
-                  <div class="form-group">
-                    <label for="phone">Phone Number:</label>
-                    <input type="number" class="form-control" id="pwd" />
-                  </div>
 
-                  <div class="form-group">
-                    <label for="package">Package:</label>
-                    <input type="text" class="form-control" id="package" />
-                  </div>
-
-                  <div class="form-group">
-                    <label for="type">Type:</label>
-                    <input type="text" class="form-control" id="type" />
-                  </div>
-
-                  <div class="form-group">
-                    <label for="complaint">Complaint:</label>
-                    <input type="text" class="form-control" id="complaint" />
-                  </div>
-
-                  <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
+        <!-- Complaint Modal -->
         <div id="complaintModal" class="modal fade" role="dialog" aria-labelledby="complaintModalLongTitle" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <!-- Modal content-->
@@ -294,7 +312,7 @@
 
                   <div class="form-group" style="padding-top: 10px">
                     <select name="Category" id="category" class="form-control">
-                      <option value="" disabled="" selected="">Food Type</option>
+                      <option value="" disabled selected>Food Type</option>
                       <option value="Breakfast">Breakfast</option>
                       <option value="Lunch">Lunch</option>
                       <option value="Dinner">Dinner</option>
@@ -303,7 +321,7 @@
 
                   <div class="form-group" style="padding-top: 10px">
                     <select name="Complaint" id="complaint" class="form-control">
-                      <option value="" disabled="" selected="">Complaint Type</option>
+                      <option value="" disabled selected>Complaint Type</option>
                       <option value="Delivery">Delivery Issue</option>
                       <option value="Food">Food Related Issue</option>
                       <option value="Other">Other</option>
@@ -314,7 +332,7 @@
                     <textarea type="text" name="Description" class="form-control" placeholder="Description" id="descId"></textarea>
                   </div>
                   <div class="form-group" style="visibility: hidden">
-                    <select name="Status" id="status" class="form-control" vi="">
+                    <select name="Status" id="status" class="form-control">
                       <option value="New">New</option>
                     </select>
                   </div>
@@ -323,17 +341,14 @@
                     Submit
                   </button>
                   <p id="SuccessMessage" style="font-size: 14px; color: green; font-weight: bold"></p>
-                                    <p id="AlertMessage" style="
-                      font-size: 14px;
-                      color: rgb(204, 47, 66);
-                      font-weight: bold;
-                    "></p>
+                  <p id="AlertMessage" style="font-size: 14px; color: rgb(204, 47, 66); font-weight: bold;"></p>
                 </form>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
       <section class="howwework">
         <div class="container how-work">
           <div class="how-work-text">
@@ -369,8 +384,9 @@
           </div>
         </div>
       </section>
+      
       <section class="aboutus">
-        <div class="container about-us">
+        <div class="container about">
           <div class="row">
             <div class="col-lg-6">
               <img src="{{ url_for('static', filename='images/Delivery-boy.png') }}">
@@ -403,6 +419,7 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
           </div>
         </div>
       </section>
+      
       <section class="ourplan">
         <div class="container our-plan">
           <div class="our-plan-text">
@@ -446,9 +463,6 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
               <div class="food-plan-details">
                 <h3 class="food-plan-rate">5,999</h3>
                 <h3 class="food-plan-month">Per Month</h3>
-                <!-- <h3 class="customise">
-                  <i class="fa-solid fa-circle-plus"></i>
-                </h3> -->
                 <ul class="food-plan-ul">
                   <li>30 Non days</li>
                   <li>Other Plans</li>
@@ -458,61 +472,7 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
           </div>
         </div>
       </section>
-      <!-- <section class="foodcategories">
-        <div class="container food-categories">
-          <div class="food-categories-text">
-            <h3 class="about-us-sub-head">
-              <span class="about-us-head">Food</span> Categories
-            </h3>
-          </div>
-          <div class="food-categories-content">
-            <div class="row justify-content-center">
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Break fast<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Lunch<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Dinner<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Snacks<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Juices<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div class="food-category">
-                  <div class="food-category-name">
-                    Beverages<i class="fa-regular fa-circle-right category-icon"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> -->
+      
       <section class="mobileapp">
         <div class="mobile-app">
           <div class="container">
@@ -524,36 +484,11 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
                 Say no to untimely eating schedule with MealCloud's scheduled
                 and healthy food delivery
               </p>
-              <!-- <button class="mobile-app-button">
-                <i class="fa fa-circle-arrow-down"></i>Download App
-              </button> -->
             </div>
           </div>
         </div>
       </section>
-      <!-- <section class="tensionfree">
-        <div class="container tension-free">
-          <div class="row tension-free-content">
-            <div class="col-lg-5 tension-free-text">
-              <h3 class="tension-free-head">BE TENSION FREE!</h3>
-              <h5 class="tension-free-sub-head">On-Time Delivery</h5>
-              <p class="tension-free-desc">
-                You have an option to edit the delivery time that suits your
-                schedule. Our fast delivery system will take care of all your
-                need.
-              </p>
-              <ul class="tension-free-ul">
-                <li>Free Delivery</li>
-                <li>Well Wrapped</li>
-                <li>Choose Your Delivery Time</li>
-              </ul>
-            </div>
-            <div class="col-lg-7 tension-free-img">
-              <img src="{{ url_for('static', filename='images/be-tension-free-img.png') }}">
-            </div>
-          </div>
-        </div>
-      </section> -->
+      
       <section class="whychooseus">
         <div class="container why-choose-us">
           <div class="why-choose-us-text">
@@ -622,6 +557,7 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
           </div>
         </div>
       </section>
+      
       <section class="footer">
         <div class="container">
           <div class="footer-box">
@@ -648,55 +584,16 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
             <div class="row footer-address">
               <div class="col-lg-6">
                 <div class="address d-flex text-white">
-                  
                   <div class="mx-4">
                     <h4>Enjoy your</h4>
                     <h4 class="text-yellow mb-4">Delicious Food</h4>
                     <div class="contact-text">
-                      <span class="mail-icon"><i class="fa-solid fa-envelope"></i></span>support@SuraMess.com
+                      <span class="mail-icon"><i class="fa-solid fa-envelope"></i></span>support@MealCloud.com
                     </div>
                     <div class="contact-text">
                       <span class="phone-icon"><img src="{{ url_for('static', filename='images/callus.png') }}" alt=""></span>999999999
                     </div>
                   </div>
-                </div>
-              </div>
-                            <div class="col-6 col-lg-3">
-                <div class="quicklinks">
-                  <h3 class="quick-links-head">Quick Links</h3>
-                  <ul class="quick-links">
-                    <li>
-                      <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
-                    </li>
-                    <li>
-                      <a class="nav-link" href="./about-us.html">About Us</a>
-                    </li>
-                    <li>
-                      <a class="nav-link" href="./features.html">Features</a>
-                    </li>
-                    <li><a class="nav-link" href="./plans.html">Plans</a></li>
-                    <li>
-                      <a class="nav-link active" href="./privacy-policy.html">Privacy Policy</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" href="./cancellation-policy.html">Cancellation Policy</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" href="./terms-and-condition.html">Terms & Condition</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" href="./shipping-and-delivery.html">Shipping & Delivery Policy</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" href="./support.html">Support</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" href="./contact-us.html">Contact Us</a>
-                    </li>
-                    <li>
-                      <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#complaintModal">Complaint</a>
-                    </li>
-                  </ul>
                 </div>
               </div>
               <div class="col-6 col-lg-3">
@@ -713,18 +610,12 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
               </div>
             </div>
           </div>
-          <!-- <div class="copyright">
-            <div>Copyright © 2025. M. All rights reserved.</div>
-            <!-- <div>
-                            Designed by LogicSky.
-                        </div> -->
-          </div> -->
         </div>
       </section>
     </section>
+    
     <script>
-      const scriptURL =
-        "https://script.google.com/macros/s/AKfycbyTbHfT7rVTcCpF6NiH0Wo66vyEXAXvj1uXJpeK6HfWv44wIiQ-jog2SUVNI15zG7Gfgg/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbyTbHfT7rVTcCpF6NiH0Wo66vyEXAXvj1uXJpeK6HfWv44wIiQ-jog2SUVNI15zG7Gfgg/exec";
       const form = document.querySelector("#form");
       const btn = document.querySelector("#submit");
 
@@ -741,7 +632,6 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
           AlertMessage.innerHTML = "Please fill the fields";
           return false;
         } else {
-          // e.preventDefault();
           AlertMessage.innerHTML = "";
           btn.disabled = true;
           btn.innerHTML = "Loading...";
@@ -758,14 +648,13 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
               $("#category").val("");
               $("#complaint").val("");
 
-              SuccessMessage.innerHTML =
-                "Complaint registered successfully. We will contact you soon....";
+              SuccessMessage.innerHTML = "Complaint registered successfully. We will contact you soon....";
 
               setTimeout(function () {
                 SuccessMessage.innerHTML = "";
                 AlertMessage.innerHTML = "";
                 $("#complaintModal").modal("hide");
-              }, 2000); // milliseconds
+              }, 2000);
             })
             .catch((error) => {
               btn.disabled = false;
@@ -776,5 +665,7 @@ We bring together talented neighborhood cooks who prepare meals in their own kit
       });
     </script>
   
-<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sg2plzcpnl466812'},{'dcenter':'sg2'},{'cp_id':'9893880'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src="{{ url_for('static', filename='js/scc-c2.min.js') }}"></script>
-</body></html>
+    <script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sg2plzcpnl466812'},{'dcenter':'sg2'},{'cp_id':'9893880'},{'cp_cl':'8'})</script>
+    <script src="{{ url_for('static', filename='js/scc-c2.min.js') }}"></script>
+</body>
+</html>

@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     :root{
       --black:#000;
@@ -17,50 +18,726 @@
       --primary:#0d6efd;
       --card-bg:#ffffff;
       --alert-red:#cc2f42;
+      --success-green:#28a745;
     }
-    body{ font-family: 'Inter', sans-serif; background:var(--bg-light); color:var(--black); }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body{ 
+      font-family: 'Inter', sans-serif; 
+      background:var(--bg-light); 
+      color:var(--black);
+      min-height: 100vh;
+    }
+    
+    body {
+      background-image: url("/static/images/Main-Background.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    
+    .navbar {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95) !important;
+    }
+    
     .navbar-brand img{ max-height:40px; }
-    .page-hero{ padding:48px 0; text-align:center; }
-    .page-hero h1{ font-size:2.25rem; font-weight:700; }
-    .page-hero p{ color:var(--muted); margin-bottom:0.5rem; }
-    .plans-grid .card{ border-radius:12px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.06); border:none; background:var(--card-bg); }
-    .food-plan-rate{ font-size:2.5rem; font-weight:800; margin:0; }
-    .food-plan-month{ color:var(--muted); margin-bottom:14px; font-weight:600; }
-    .food-plan-ul{ list-style: disc; padding-left:18px; text-align:left; color:#333; margin-bottom:16px; }
-    .cta-row{ text-align:center; margin-top:20px; }
-    .register-button{ background:var(--primary); color:var(--white); padding:10px 18px; border-radius:8px; border:none; font-weight:600; }
-    .customize-button{ background:transparent; border:2px solid rgba(0,0,0,0.08); padding:8px 16px; border-radius:8px; }
-    .viewmenu-button{ background:transparent; border:1px dashed rgba(0,0,0,0.12); padding:8px 14px; border-radius:8px; margin-left:8px; }
+    
+    .page-hero{ 
+      padding:48px 0; 
+      text-align:center;
+      animation: fadeInDown 0.6s ease-out;
+    }
+    
+    .page-hero h1{ 
+      font-size:2.25rem; 
+      font-weight:700;
+      margin-bottom: 1rem;
+    }
+    
+    .page-hero p{ 
+      color:var(--muted); 
+      margin-bottom:0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .plans-grid .card{ 
+      border-radius:12px; 
+      padding:20px; 
+      box-shadow:0 6px 20px rgba(0,0,0,0.06); 
+      border:none; 
+      background:var(--card-bg); 
+      transition: all 0.3s ease;
+      height: 100%;
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+    
+    .plans-grid .card:nth-child(1) { animation-delay: 0.1s; }
+    .plans-grid .card:nth-child(2) { animation-delay: 0.2s; }
+    .plans-grid .card:nth-child(3) { animation-delay: 0.3s; }
+    .plans-grid .card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .plans-grid .card:hover{ 
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    
+    .food-plan-rate{ 
+      font-size:2.5rem; 
+      font-weight:800; 
+      margin:0;
+      background: linear-gradient(135deg, var(--primary) 0%, #0056b3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .food-plan-month{ 
+      color:var(--muted); 
+      margin-bottom:14px; 
+      font-weight:600;
+      font-size: 0.95rem;
+    }
+    
+    .food-plan-ul{ 
+      list-style: none; 
+      padding-left:0; 
+      text-align:left; 
+      color:#333; 
+      margin-bottom:16px;
+    }
+    
+    .food-plan-ul li {
+      padding: 8px 0;
+      position: relative;
+      padding-left: 28px;
+    }
+    
+    .food-plan-ul li:before {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      color: var(--success-green);
+      font-size: 14px;
+    }
+    
+    .cta-row{ 
+      text-align:center; 
+      margin-top:40px;
+      animation: fadeIn 1s ease-out;
+      animation-delay: 0.6s;
+      animation-fill-mode: both;
+    }
+    
+    .register-button{ 
+      background:var(--primary); 
+      color:var(--white); 
+      padding:10px 18px; 
+      border-radius:8px; 
+      border:none; 
+      font-weight:600; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .register-button:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .register-button:hover:before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .register-button:hover{ 
+      background:#0056b3;
+      transform: scale(1.05);
+    }
+    
+    .register-button:active {
+      transform: scale(0.98);
+    }
+    
+    .register-button:disabled{ 
+      background:#6c757d; 
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    
+    .customize-button{ 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      font-size: 1.05rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .customize-button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s;
+    }
+    
+    .customize-button:hover:before {
+      left: 100%;
+    }
+    
+    .customize-button:hover{ 
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    .customize-button:active{
+      transform: translateY(-1px);
+    }
+    
+    .viewmenu-button{ 
+      background:transparent; 
+      border:1px dashed rgba(0,0,0,0.12); 
+      padding:8px 14px; 
+      border-radius:8px; 
+      margin-left:8px; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .viewmenu-button:hover{
+      background: rgba(13, 110, 253, 0.08);
+      border-color: var(--primary);
+      border-style: solid;
+      transform: scale(1.02);
+    }
+    
     .text-yellow{ color:var(--accent-yellow); }
-    .footer{ background:#101010; color:#fff; padding:40px 0; margin-top:48px; }
-    .menu-section h6{ font-weight:700; margin-top:8px; }
-    .menu-item{ margin-bottom:6px; }
-    @media(min-width:992px){
-      .plans-grid .card { min-height: 260px; }
+    
+    .footer{ 
+      background:#101010; 
+      color:#fff; 
+      padding:40px 0; 
+      margin-top:48px;
+    }
+    
+    .footer a {
+      transition: all 0.3s ease;
+    }
+    
+    .footer a:hover {
+      color: var(--accent-yellow) !important;
+      transform: scale(1.2);
+      display: inline-block;
+    }
+    
+    .menu-section h6{ 
+      font-weight:700; 
+      margin-top:16px;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .menu-item{ 
+      margin-bottom:8px;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .menu-item:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .customer-modal .form-control{ 
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+      padding: 12px 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .customer-modal .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+    
+    .alert{ 
+      margin-top: 10px;
+      border-radius: 8px;
+      animation: slideInDown 0.3s ease-out;
+    }
+    
+    .btn-loading{ 
+      position: relative; 
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    
+    .btn-loading::after{
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s ease infinite;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+    
+    @keyframes spin{ 
+      0%{ transform: rotate(0deg); } 
+      100%{ transform: rotate(360deg); } 
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideInDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    #payment-form{ max-width: 500px; margin: 0 auto; }
+    
+    #card-element{ 
+      padding: 14px; 
+      border: 2px solid #ced4da; 
+      border-radius: 8px; 
+      background: white;
+      transition: all 0.3s ease;
+    }
+    
+    #card-element:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+    
+    #card-errors{ 
+      color: #dc3545; 
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Custom Plan Modal Styles */
+    .meal-type-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .meal-type-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .meal-type-card:hover {
+      border-color: var(--primary);
+      background: rgba(13, 110, 253, 0.05);
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    
+    .meal-type-card.selected {
+      border-color: var(--primary);
+      background: rgba(13, 110, 253, 0.1);
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+      transform: scale(1.02);
+    }
+    
+    .meal-type-card i {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+      transition: transform 0.3s ease;
+    }
+    
+    .meal-type-card:hover i {
+      transform: scale(1.1);
+    }
+    
+    .duration-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .duration-btn {
+      padding: 12px 24px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      position: relative;
+    }
+    
+    .duration-btn:hover {
+      border-color: var(--primary);
+      background: rgba(13, 110, 253, 0.05);
+      transform: translateY(-2px);
+    }
+    
+    .duration-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .duration-btn .badge {
+      font-size: 0.7rem;
+      margin-left: 4px;
+    }
+    
+    .price-display {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    .price-display h3 {
+      font-size: 2.5rem;
+      margin: 0;
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .price-display p {
+      margin: 0;
+      opacity: 0.95;
+    }
+    
+    .slider-container {
+      margin: 20px 0;
+    }
+    
+    .slider-container input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: linear-gradient(to right, var(--primary) 0%, var(--primary) 100%, #e0e0e0 100%);
+      outline: none;
+      -webkit-appearance: none;
+      transition: all 0.3s ease;
+    }
+    
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+    
+    .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+    }
+    
+    .slider-container input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    .meals-per-day {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    
+    .meal-checkbox {
+      display: none;
+    }
+    
+    .meal-label {
+      padding: 12px 24px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      background: white;
+      font-weight: 500;
+    }
+    
+    .meal-label:hover {
+      border-color: var(--primary);
+      background: rgba(13, 110, 253, 0.05);
+      transform: translateY(-2px);
+    }
+    
+    .meal-checkbox:checked + .meal-label {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+    
+    .modal-header {
+      border-bottom: 2px solid #f0f0f0;
+      padding: 20px 24px;
+    }
+    
+    .modal-title {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .modal-body {
+      padding: 24px;
+    }
+    
+    .modal-footer {
+      border-top: 2px solid #f0f0f0;
+      padding: 20px 24px;
+    }
+    
+    .btn {
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .btn-success {
+      background: var(--success-green);
+      border: none;
+    }
+    
+    .btn-success:hover {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    
+    /* Loading Spinner */
+    .spinner-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .spinner-overlay.active {
+      display: flex;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Responsive Design */
+    @media(max-width: 768px) {
+      .page-hero h1 {
+        font-size: 1.75rem;
+      }
+      
+      .food-plan-rate {
+        font-size: 2rem;
+      }
+      
+      .meal-type-selector {
+        grid-template-columns: 1fr;
+      }
+      
+      .duration-selector {
+        flex-direction: column;
+      }
+      
+      .duration-btn {
+        width: 100%;
+      }
+      
+      .customize-button {
+        font-size: 0.95rem;
+        padding: 12px 20px;
+      }
+    }
+    
+    @media(min-width:992px){ 
+      .plans-grid .card { 
+        min-height: 320px; 
+      } 
+    }
+    
+    /* Success Animation */
+    @keyframes scaleIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .success-icon {
+      animation: scaleIn 0.5s ease-out;
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+<!-- Loading Spinner -->
+<div class="spinner-overlay" id="loadingSpinner">
+  <div class="spinner"></div>
+</div>
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt="MealCloud"></a>
+    <a class="navbar-brand fw-bold" href="/">
+      <span style="color: var(--primary);">Meal</span><span style="color: var(--accent-yellow);">Cloud</span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navmenu">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
-        <li class="nav-item"><a class="nav-link active" href="plans.html">Plans</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/plans">Plans</a></li>
+        <!-- <li class="nav-item"><a class="nav-link" href="/about">About</a></li> -->
+        <!-- <li class="nav-item"><a class="nav-link" href="/features">Features</a></li> -->
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="page-hero">
   <div class="container">
     <h1>Our <span class="text-yellow">Food Plans</span></h1>
@@ -68,11 +745,9 @@
   </div>
 </section>
 
-<!-- PLANS -->
 <section class="container plans-grid pb-5">
   <div class="row g-4">
-    <!-- Plan 1: ₹999 Per Week (7 veg days) -->
-
+    <!-- Plan 1: Veg Week -->
     <div class="col-md-6 col-lg-3">
       <div class="card text-center">
         <div class="card-body d-flex flex-column">
@@ -81,73 +756,78 @@
           <ul class="food-plan-ul mb-3">
             <li>7 veg days</li>
             <li>For vegetarians</li>
+            <li>Breakfast, Lunch & Dinner</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 1 (₹999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="veg_week"
-        data-amount="99900"
-        data-description="7 veg days weekly plan (₹999/week)">
-  Subscribe
-</button>
-
-            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegWeekModal">View Menu</button>
+            <button class="register-button subscribe-btn"
+                    data-plan-id="veg_week"
+                    data-amount="99900"
+                    data-description="7 veg days weekly plan (₹999/week)">
+              <i class="fas fa-shopping-cart me-2"></i>Subscribe
+            </button>
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegWeekModal">
+              <i class="fas fa-eye me-1"></i>View Menu
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Plan 2: ₹2,999 Per Week (4 veg + 3 nonveg) -->
+    <!-- Plan 2: Mixed Week -->
     <div class="col-md-6 col-lg-3">
       <div class="card text-center">
         <div class="card-body d-flex flex-column">
+          <div class="badge bg-success position-absolute top-0 end-0 m-3">Popular</div>
           <h3 class="food-plan-rate">₹2,999</h3>
           <h5 class="food-plan-month">Per Week</h5>
           <ul class="food-plan-ul mb-3">
             <li>4 veg days</li>
-            <li>3 nonveg days</li>
+            <li>3 non-veg days</li>
+            <li>Best variety</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 2 (₹2,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="mixed_week"
-        data-amount="299900"
-        data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)">
-  Subscribe
-</button>
-
-            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuMixedWeekModal">View Menu</button>
+            <button class="register-button subscribe-btn"
+                    data-plan-id="mixed_week"
+                    data-amount="299900"
+                    data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)">
+              <i class="fas fa-shopping-cart me-2"></i>Subscribe
+            </button>
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuMixedWeekModal">
+              <i class="fas fa-eye me-1"></i>View Menu
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Plan 3: ₹3,999 Per Month (30 veg days) -->
+    <!-- Plan 3: Veg Month -->
     <div class="col-md-6 col-lg-3">
       <div class="card text-center">
         <div class="card-body d-flex flex-column">
+          <div class="badge bg-warning position-absolute top-0 end-0 m-3">Save 15%</div>
           <h3 class="food-plan-rate">₹3,999</h3>
           <h5 class="food-plan-month">Per Month</h5>
           <ul class="food-plan-ul mb-3">
             <li>30 veg days</li>
-            <li>For vegetarians</li>
+            <li>Best value</li>
+            <li>Daily fresh meals</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 3 (₹3,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="veg_month"
-        data-amount="399900"
-        data-description="30 veg days monthly plan (₹3,999/month)">
-  Subscribe
-</button>
-
-            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegMonthModal">View Menu</button>
+            <button class="register-button subscribe-btn"
+                    data-plan-id="veg_month"
+                    data-amount="399900"
+                    data-description="30 veg days monthly plan (₹3,999/month)">
+              <i class="fas fa-shopping-cart me-2"></i>Subscribe
+            </button>
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuVegMonthModal">
+              <i class="fas fa-eye me-1"></i>View Menu
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Plan 4: ₹5,999 Per Month (30 non days / Other Plans) -->
+    <!-- Plan 4: Non-Veg Month -->
     <div class="col-md-6 col-lg-3">
       <div class="card text-center">
         <div class="card-body d-flex flex-column">
@@ -155,192 +835,924 @@
           <h5 class="food-plan-month">Per Month</h5>
           <ul class="food-plan-ul mb-3">
             <li>30 non-veg days</li>
-            <li>Other plans available</li>
+            <li>Premium selection</li>
+            <li>Protein rich meals</li>
           </ul>
           <div class="mt-auto">
-            <!-- Plan 4 (₹5,999) -->
-<button class="register-button subscribe-btn"
-        data-plan-id="nonveg_month"
-        data-amount="599900"
-        data-description="30 non-veg days monthly plan (₹5,999/month)">
-  Subscribe
-</button>
-
-            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuNonvegMonthModal">View Menu</button>
+            <button class="register-button subscribe-btn"
+                    data-plan-id="nonveg_month"
+                    data-amount="599900"
+                    data-description="30 non-veg days monthly plan (₹5,999/month)">
+              <i class="fas fa-shopping-cart me-2"></i>Subscribe
+            </button>
+            <button class="viewmenu-button" data-bs-toggle="modal" data-bs-target="#menuNonvegMonthModal">
+              <i class="fas fa-eye me-1"></i>View Menu
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CTA / note -->
   <div class="row">
     <div class="col-12 cta-row">
-      <p class="mt-4">Not sure which plan fits? <button class="customize-button ms-2">Customize Plan</button></p>
+      <p class="mt-4 mb-2" style="font-size: 1.1rem;">Not sure which plan fits? 
+        <button class="customize-button ms-2" data-bs-toggle="modal" data-bs-target="#customPlanModal">
+          <i class="fas fa-sliders-h me-2"></i>Customize Your Plan
+        </button>
+      </p>
+      <p class="text-muted"><small><i class="fas fa-shield-alt me-1"></i>Secure payment powered by Stripe</small></p>
     </div>
   </div>
 </section>
 
-<!-- MENU MODALS -->
+<!-- CUSTOM PLAN MODAL -->
+<div class="modal fade" id="customPlanModal" tabindex="-1" aria-labelledby="customPlanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customPlanModalLabel">
+          <i class="fas fa-magic me-2"></i>Create Your Custom Plan
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="customPlanForm">
+          <!-- Step 1: Meal Type -->
+          <div class="mb-4">
+            <h6 class="mb-3"><i class="fas fa-utensils me-2"></i>Step 1: Select Meal Type</h6>
+            <div class="meal-type-selector">
+              <div class="meal-type-card" data-type="veg" data-price="33">
+                <i class="fas fa-leaf"></i>
+                <h6 class="mb-1">Vegetarian</h6>
+                <p class="text-muted small mb-0">₹33/meal</p>
+              </div>
+              <div class="meal-type-card" data-type="nonveg" data-price="66">
+                <i class="fas fa-drumstick-bite"></i>
+                <h6 class="mb-1">Non-Vegetarian</h6>
+                <p class="text-muted small mb-0">₹66/meal</p>
+              </div>
+              <div class="meal-type-card" data-type="mixed" data-price="50">
+                <i class="fas fa-balance-scale"></i>
+                <h6 class="mb-1">Mixed</h6>
+                <p class="text-muted small mb-0">₹50/meal avg</p>
+              </div>
+              <div class="meal-type-card" data-type="custom" data-price="45">
+                <i class="fas fa-cogs"></i>
+                <h6 class="mb-1">Custom Mix</h6>
+                <p class="text-muted small mb-0">You decide</p>
+              </div>
+            </div>
+          </div>
 
-<!-- Veg Weekly Modal -->
+          <!-- Step 2: Duration -->
+          <div class="mb-4">
+            <h6 class="mb-3"><i class="fas fa-calendar-alt me-2"></i>Step 2: Select Duration</h6>
+            <div class="duration-selector">
+              <button type="button" class="duration-btn" data-duration="7" data-multiplier="1">
+                1 Week
+              </button>
+              <button type="button" class="duration-btn" data-duration="14" data-multiplier="0.95">
+                2 Weeks <span class="badge bg-success">5% off</span>
+              </button>
+              <button type="button" class="duration-btn" data-duration="30" data-multiplier="0.85">
+                1 Month <span class="badge bg-success">15% off</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Meals Per Day -->
+          <div class="mb-4">
+            <h6 class="mb-3"><i class="fas fa-clock me-2"></i>Step 3: Select Meals Per Day</h6>
+            <div class="meals-per-day">
+              <input type="checkbox" id="breakfast" class="meal-checkbox" value="breakfast">
+              <label for="breakfast" class="meal-label">
+                <i class="fas fa-coffee me-1"></i> Breakfast
+              </label>
+              
+              <input type="checkbox" id="lunch" class="meal-checkbox" value="lunch">
+              <label for="lunch" class="meal-label">
+                <i class="fas fa-sun me-1"></i> Lunch
+              </label>
+              
+              <input type="checkbox" id="dinner" class="meal-checkbox" value="dinner">
+              <label for="dinner" class="meal-label">
+                <i class="fas fa-moon me-1"></i> Dinner
+              </label>
+            </div>
+          </div>
+
+          <!-- Days Slider (for weekly plans) -->
+          <div class="mb-4 slider-container" id="daysSliderContainer" style="display: none;">
+            <h6 class="mb-3"><i class="fas fa-calendar-day me-2"></i>Days per Week</h6>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Days: <strong id="daysValue">7</strong></span>
+              <span class="text-muted">Max: 7 days/week</span>
+            </div>
+            <input type="range" id="daysSlider" min="1" max="7" value="7" class="form-range">
+          </div>
+
+          <!-- Price Display -->
+          <div class="price-display">
+            <p class="mb-2 small">Your Custom Plan Total</p>
+            <h3 id="customPlanPrice">₹0</h3>
+            <p class="mb-0 small" id="customPlanDetails">Select options to see price</p>
+          </div>
+
+          <!-- Special Requests -->
+          <div class="mb-4">
+            <h6 class="mb-3"><i class="fas fa-comment-dots me-2"></i>Special Requests (Optional)</h6>
+            <textarea class="form-control" id="specialRequests" rows="3" 
+                      placeholder="Any dietary restrictions, allergies, or special preferences..."></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary btn-lg" id="proceedCustomPlan" disabled>
+              <i class="fas fa-arrow-right me-2"></i>Proceed to Payment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">
+          <i class="fas fa-credit-card me-2"></i>Complete Your Subscription
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Customer Details Section -->
+        <div id="customerDetailsSection">
+          <h6 class="mb-3"><i class="fas fa-user me-2"></i>Customer Information</h6>
+          <form id="customerForm">
+            <div class="mb-3">
+              <label for="customerName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="customerName" placeholder="Enter your full name" required>
+            </div>
+            <div class="mb-3">
+              <label for="customerEmail" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="customerEmail" placeholder="your.email@example.com" required>
+            </div>
+            <div class="mb-3">
+              <label for="customerPhone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="customerPhone" placeholder="10-digit phone number" required maxlength="10">
+              <div class="form-text">Enter 10-digit Indian mobile number</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fas fa-arrow-right me-2"></i>Continue to Payment
+            </button>
+          </form>
+          <div id="customerAlert" class="alert" style="display: none;"></div>
+        </div>
+
+        <!-- Payment Section -->
+        <div id="paymentSection" style="display: none;">
+          <h6 class="mb-3"><i class="fas fa-lock me-2"></i>Payment Details</h6>
+          <div class="card mb-3" style="background: #f8f9fa;">
+            <div class="card-body">
+              <p class="mb-2"><strong>Plan:</strong> <span id="planDesc"></span></p>
+              <p class="mb-0"><strong>Amount:</strong> <span id="planAmount" style="font-size: 1.5rem; color: var(--primary);"></span></p>
+            </div>
+          </div>
+          <form id="payment-form">
+            <label for="card-element" class="form-label">
+              Card Details
+            </label>
+            <div id="card-element"></div>
+            <div id="card-errors" role="alert"></div>
+            <button type="submit" class="btn btn-success w-100 mt-3" id="submitPayment">
+              <i class="fas fa-lock me-2"></i>Pay Securely Now
+            </button>
+          </form>
+          <div class="text-center mt-3">
+            <small class="text-muted">
+              <i class="fas fa-shield-alt me-1"></i>
+              Secured by Stripe. Your payment information is encrypted.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menu Modals -->
 <div class="modal fade" id="menuVegWeekModal" tabindex="-1" aria-labelledby="menuVegWeekLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="menuVegWeekLabel">Sample Menu — ₹999 / Week (7 veg days)</h5>
+        <h5 class="modal-title" id="menuVegWeekLabel">
+          <i class="fas fa-leaf me-2"></i>Sample Menu — ₹999 / Week
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Below is a sample daily menu for the Vegetarian Weekly Plan. Each day will have variations — this shows representative items from South, North & regional Indian cuisine.</p>
-
+        <p class="lead">Kerala-style vegetarian weekly plan</p>
         <div class="menu-section">
-          <h6>Breakfast</h6>
-          <div class="menu-item">Idli + Sambar + Coconut Chutney</div>
-          <div class="menu-item">Masala Dosa / Plain Dosa</div>
-          <div class="menu-item">Poha with roasted peanuts</div>
-          <div class="menu-item">Paratha (Aloo / Paneer) with curd & pickle</div>
-
-          <h6>Lunch</h6>
-          <div class="menu-item">Steamed rice / Jeera rice</div>
-          <div class="menu-item">Dal tadka</div>
-          <div class="menu-item">Seasonal vegetable curry (ex: Aloo Gobi / Bhindi masala)</div>
-          <div class="menu-item">Raita or salad</div>
-
-          <h6>Evening Snack</h6>
-          <div class="menu-item">Samosa or Medu Vada</div>
-          <div class="menu-item">Chai / Masala chai</div>
-
-          <h6>Dinner</h6>
-          <div class="menu-item">Chapati / Phulka</div>
-          <div class="menu-item">Paneer butter masala / Chole</div>
-          <div class="menu-item">Simple vegetable sabzi</div>
+          <h6><i class="fas fa-coffee me-2"></i>Breakfast</h6>
+          <div class="menu-item">Puttu with kadala curry</div>
+          <div class="menu-item">Appam with vegetable stew</div>
+          <div class="menu-item">Idli with sambar and chutney</div>
+          
+          <h6><i class="fas fa-sun me-2"></i>Lunch</h6>
+          <div class="menu-item">Matta rice with sambar</div>
+          <div class="menu-item">Avial (mixed vegetables in coconut)</div>
+          <div class="menu-item">Thoran (stir-fried vegetables)</div>
+          <div class="menu-item">Papadam and pickle</div>
+          
+          <h6><i class="fas fa-moon me-2"></i>Dinner</h6>
+          <div class="menu-item">Chapati with vegetable kurma</div>
+          <div class="menu-item">Rice with dal fry</div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="register-button subscribe-btn" data-plan-id="veg_week" data-amount="99900" 
+                data-description="7 veg days weekly plan (₹999/week)" data-bs-dismiss="modal">
+          <i class="fas fa-shopping-cart me-2"></i>Subscribe Now
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Mixed Week Modal (4 veg + 3 nonveg) -->
 <div class="modal fade" id="menuMixedWeekModal" tabindex="-1" aria-labelledby="menuMixedWeekLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="menuMixedWeekLabel">Sample Menu — ₹2,999 / Week (4 veg + 3 non-veg days)</h5>
+        <h5 class="modal-title" id="menuMixedWeekLabel">
+          <i class="fas fa-balance-scale me-2"></i>Sample Menu — ₹2,999 / Week
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Sample rotation combining vegetarian and non-vegetarian Indian dishes.</p>
-
+        <p class="lead">Mixed weekly plan with variety</p>
         <div class="menu-section">
-          <h6>Veg Day Example</h6>
-          <div class="menu-item">Breakfast: Upma / Idli</div>
-          <div class="menu-item">Lunch: Rice, Dal, Mix Veg, Curd</div>
-          <div class="menu-item">Snack: Pakoras + Tea</div>
-          <div class="menu-item">Dinner: Chapati + Paneer Bhurji</div>
-
-          <h6>Non-Veg Day Example</h6>
-          <div class="menu-item">Breakfast: Egg bhurji with toast or omelette</div>
-          <div class="menu-item">Lunch: Rice, Chicken curry (home-style), Dal</div>
-          <div class="menu-item">Snack: Masala peanuts/banana</div>
-          <div class="menu-item">Dinner: Fish fry with chapati / Egg curry</div>
+          <h6><i class="fas fa-leaf me-2"></i>Vegetarian Days (4 days)</h6>
+          <div class="menu-item">Traditional Kerala vegetarian meals</div>
+          <div class="menu-item">North Indian veg specialties</div>
+          
+          <h6><i class="fas fa-drumstick-bite me-2"></i>Non-Vegetarian Days (3 days)</h6>
+          <div class="menu-item">Kerala style fish curry with rice</div>
+          <div class="menu-item">Chicken fry with chapati</div>
+          <div class="menu-item">Egg roast and paratha</div>
+          <div class="menu-item">Biryani special on Sundays</div>
         </div>
-
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="register-button subscribe-btn" data-plan-id="mixed_week" data-amount="299900" 
+                data-description="4 veg + 3 nonveg weekly plan (₹2,999/week)" data-bs-dismiss="modal">
+          <i class="fas fa-shopping-cart me-2"></i>Subscribe Now
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Veg Monthly Modal -->
 <div class="modal fade" id="menuVegMonthModal" tabindex="-1" aria-labelledby="menuVegMonthLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="menuVegMonthLabel">Sample Menu — ₹3,999 / Month (30 veg days)</h5>
+        <h5 class="modal-title" id="menuVegMonthLabel">
+          <i class="fas fa-leaf me-2"></i>Sample Menu — ₹3,999 / Month
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Monthly Veg plan sample — rotating regional menus ensure variety every day.</p>
-
+        <p class="lead">Monthly vegetarian plan with rotating menu</p>
         <div class="menu-section">
-          <h6>Weekly Rotation (examples)</h6>
-          <div class="menu-item"><strong>Week 1:</strong> South Indian focus — Idli, Dosa, Sambar, Rasam, Coconut chutney, Vegetable kurma</div>
-          <div class="menu-item"><strong>Week 2:</strong> North Indian focus — Parathas, Rajma, Chole, Paneer dishes, Mixed veg</div>
-          <div class="menu-item"><strong>Week 3:</strong> Maharashtrian / Gujarati — Poha, Thepla, Dal, Kadhi, Seasonal sabzi</div>
-          <div class="menu-item"><strong>Week 4:</strong> Bengali / Hyderabadi touches — Veg biryani (veg), dal, bharta/extras</div>
-
-          <h6>Snacks & Extras</h6>
-          <div class="menu-item">Seasonal fruit once/week, curd/raita, occasional sweets (gulab jamun / kheer)</div>
-
+          <h6><i class="fas fa-calendar-alt me-2"></i>Daily Variety</h6>
+          <div class="menu-item">Rotating breakfast: Idli, Dosa, Appam, Puttu</div>
+          <div class="menu-item">Traditional Kerala lunch thali</div>
+          <div class="menu-item">North & South Indian dinner options</div>
+          <div class="menu-item">Weekly special dishes</div>
+          <div class="menu-item">Fresh seasonal vegetables</div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="register-button subscribe-btn" data-plan-id="veg_month" data-amount="399900" 
+                data-description="30 veg days monthly plan (₹3,999/month)" data-bs-dismiss="modal">
+          <i class="fas fa-shopping-cart me-2"></i>Subscribe Now
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Non-Veg Monthly Modal -->
 <div class="modal fade" id="menuNonvegMonthModal" tabindex="-1" aria-labelledby="menuNonvegMonthLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="menuNonvegMonthLabel">Sample Menu — ₹5,999 / Month (30 non-veg days)</h5>
+        <h5 class="modal-title" id="menuNonvegMonthLabel">
+          <i class="fas fa-drumstick-bite me-2"></i>Sample Menu — ₹5,999 / Month
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Non-veg monthly plan sample — a daily non-veg main (chicken, egg, fish or mutton) with supporting veg sides and staples.</p>
-
+        <p class="lead">Premium monthly non-vegetarian plan</p>
         <div class="menu-section">
-          <h6>Typical Day (example)</h6>
-          <div class="menu-item"><strong>Breakfast:</strong> Egg omelette / Egg bhurji OR paratha with curd</div>
-          <div class="menu-item"><strong>Lunch:</strong> Steamed rice / Biryani (1–2 days per week), Chicken curry / Mutton curry / Fish curry, Dal, Seasonal veg</div>
-          <div class="menu-item"><strong>Snack:</strong> Cut fruit / Tea & savory</div>
-          <div class="menu-item"><strong>Dinner:</strong> Chapati / Rice with Egg curry / Fish fry / Light chicken sabzi</div>
-
-          <h6>Weekly Highlights</h6>
-          <div class="menu-item">Weekend special: Hyderabadi chicken biryani or fish fry; weekday favorites: chicken curry, egg curry, fish curry.</div>
-
-          <h6>Notes</h6>
-          <div class="menu-item">All non-veg items prepared fresh; portion and spice levels can be customized when ordering.</div>
+          <h6><i class="fas fa-star me-2"></i>Premium Selection</h6>
+          <div class="menu-item">Daily protein-rich meals</div>
+          <div class="menu-item">Fish curry varieties (Malabar, Kerala style)</div>
+          <div class="menu-item">Chicken preparations (fry, curry, roast)</div>
+          <div class="menu-item">Weekend Biryani specials</div>
+          <div class="menu-item">Egg dishes and breakfast options</div>
+          <div class="menu-item">Mutton special twice a month</div>
         </div>
-
       </div>
       <div class="modal-footer">
-        <button class="register-button">Subscribe to this Plan</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="register-button subscribe-btn" data-plan-id="nonveg_month" data-amount="599900" 
+                data-description="30 non-veg days monthly plan (₹5,999/month)" data-bs-dismiss="modal">
+          <i class="fas fa-shopping-cart me-2"></i>Subscribe Now
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-md-6 text-md-start text-center">
+      <div class="col-md-6 text-md-start text-center mb-3 mb-md-0">
         <h5>Enjoy your <span class="text-yellow">Delicious Food</span></h5>
-        <p class="mb-0">support@SuraMess.com • 999999999</p>
+        <p class="mb-2">
+          <i class="fas fa-envelope me-2"></i>support@MealCloud.com<br>
+          <i class="fas fa-phone me-2"></i>+91 99999 99999
+        </p>
+        <p class="text-muted small mb-0">&copy; 2024 MealCloud. All rights reserved.</p>
       </div>
-      <div class="col-md-6 text-md-end text-center mt-3 mt-md-0">
-        <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
-        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+      <div class="col-md-6 text-md-end text-center">
+        <p class="mb-3">Follow us on social media</p>
+        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook fa-2x"></i></a>
+        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram fa-2x"></i></a>
+        <a href="#" class="text-white" aria-label="Twitter"><i class="fab fa-twitter fa-2x"></i></a>
       </div>
     </div>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Global Variables
+let stripe;
+let elements;
+let cardElement;
+let selectedPlan = {};
+let customerDetails = {};
+let clientSecret;
+
+// Custom plan state
+let customPlanState = {
+    mealType: null,
+    mealPrice: 0,
+    duration: 0,
+    durationMultiplier: 1,
+    mealsPerDay: [],
+    daysPerWeek: 7,
+    specialRequests: ''
+};
+
+// Show/Hide Loading Spinner
+function showLoading() {
+    document.getElementById('loadingSpinner').classList.add('active');
+}
+
+function hideLoading() {
+    document.getElementById('loadingSpinner').classList.remove('active');
+}
+
+// Initialize Stripe
+function initializeStripe() {
+    showLoading();
+    fetch('/api/get_stripe_config')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load payment configuration');
+            }
+            return response.json();
+        })
+        .then(data => {
+            stripe = Stripe(data.publishableKey);
+            elements = stripe.elements();
+            
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#32325d',
+                        fontFamily: '"Inter", sans-serif',
+                        '::placeholder': {
+                            color: '#aab7c4'
+                        }
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a'
+                    }
+                },
+                hidePostalCode: true
+            });
+            hideLoading();
+        })
+        .catch(error => {
+            console.error('Error loading Stripe config:', error);
+            hideLoading();
+            showAlert('customerAlert', 'Failed to initialize payment system. Please refresh the page.', 'danger');
+        });
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeStripe();
+    
+    // Add event listeners to all subscribe buttons
+    document.querySelectorAll('.subscribe-btn').forEach(button => {
+        button.addEventListener('click', handleSubscribeClick);
+    });
+
+    // Form event listeners
+    document.getElementById('customerForm').addEventListener('submit', handleCustomerSubmit);
+    document.getElementById('payment-form').addEventListener('submit', handlePaymentSubmit);
+    
+    // Initialize custom plan
+    initializeCustomPlan();
+    
+    // Real-time phone validation
+    document.getElementById('customerPhone').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+});
+
+// Custom Plan Functions
+function initializeCustomPlan() {
+    // Meal type selection
+    document.querySelectorAll('.meal-type-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.meal-type-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            customPlanState.mealType = this.dataset.type;
+            customPlanState.mealPrice = parseFloat(this.dataset.price);
+            updateCustomPlanPrice();
+        });
+    });
+
+    // Duration selection
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            customPlanState.duration = parseInt(this.dataset.duration);
+            customPlanState.durationMultiplier = parseFloat(this.dataset.multiplier);
+            
+            // Show days slider only for 1-week plan
+            if (customPlanState.duration === 7) {
+                document.getElementById('daysSliderContainer').style.display = 'block';
+            } else {
+                document.getElementById('daysSliderContainer').style.display = 'none';
+                customPlanState.daysPerWeek = 7;
+            }
+            
+            updateCustomPlanPrice();
+        });
+    });
+
+    // Meals per day checkboxes
+    document.querySelectorAll('.meal-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (!customPlanState.mealsPerDay.includes(this.value)) {
+                    customPlanState.mealsPerDay.push(this.value);
+                }
+            } else {
+                customPlanState.mealsPerDay = customPlanState.mealsPerDay.filter(m => m !== this.value);
+            }
+            updateCustomPlanPrice();
+        });
+    });
+
+    // Days slider
+    const daysSlider = document.getElementById('daysSlider');
+    const daysValue = document.getElementById('daysValue');
+    
+    daysSlider.addEventListener('input', function() {
+        daysValue.textContent = this.value;
+        customPlanState.daysPerWeek = parseInt(this.value);
+        updateSliderBackground(this);
+        updateCustomPlanPrice();
+    });
+
+    // Special requests
+    document.getElementById('specialRequests').addEventListener('input', function() {
+        customPlanState.specialRequests = this.value;
+    });
+
+    // Proceed button
+    document.getElementById('proceedCustomPlan').addEventListener('click', handleCustomPlanProceed);
+}
+
+// Update slider background
+function updateSliderBackground(slider) {
+    const percentage = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, #e0e0e0 ${percentage}%, #e0e0e0 100%)`;
+}
+
+// Update custom plan price
+function updateCustomPlanPrice() {
+    const { mealType, mealPrice, duration, durationMultiplier, mealsPerDay, daysPerWeek } = customPlanState;
+    
+    if (!mealType || duration === 0 || mealsPerDay.length === 0) {
+        document.getElementById('customPlanPrice').textContent = '₹0';
+        document.getElementById('customPlanDetails').textContent = 'Select options to see price';
+        document.getElementById('proceedCustomPlan').disabled = true;
+        return;
+    }
+
+    // Calculate total meals
+    let totalMeals;
+    if (duration === 7) {
+        totalMeals = mealsPerDay.length * daysPerWeek;
+    } else {
+        const weeksCount = duration / 7;
+        totalMeals = mealsPerDay.length * 7 * weeksCount;
+    }
+    
+    // Calculate price
+    const basePrice = mealPrice * totalMeals;
+    const finalPrice = Math.round(basePrice * durationMultiplier);
+    
+    // Update display
+    document.getElementById('customPlanPrice').textContent = `₹${finalPrice.toLocaleString('en-IN')}`;
+    
+    const durationText = duration === 7 ? '1 week' : duration === 14 ? '2 weeks' : '1 month';
+    const mealsText = mealsPerDay.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ');
+    const daysText = duration === 7 && daysPerWeek < 7 ? ` (${daysPerWeek} days/week)` : '';
+    const savingsText = durationMultiplier < 1 ? `<br><span class="badge bg-success mt-1">Save ₹${Math.round(basePrice - finalPrice)}!</span>` : '';
+    
+    document.getElementById('customPlanDetails').innerHTML = `
+        <i class="fas fa-check-circle me-1"></i>
+        ${totalMeals} meals • ${mealsText} • ${durationText}${daysText}
+        ${savingsText}
+    `;
+    
+    document.getElementById('proceedCustomPlan').disabled = false;
+}
+
+// Handle custom plan proceed
+function handleCustomPlanProceed() {
+    const { mealType, duration, mealsPerDay, daysPerWeek, specialRequests } = customPlanState;
+    
+    // Calculate total meals
+    let totalMeals;
+    if (duration === 7) {
+        totalMeals = mealsPerDay.length * daysPerWeek;
+    } else {
+        const weeksCount = duration / 7;
+        totalMeals = mealsPerDay.length * 7 * weeksCount;
+    }
+    
+    // Calculate final price
+    const basePrice = customPlanState.mealPrice * totalMeals;
+    const finalPrice = Math.round(basePrice * customPlanState.durationMultiplier);
+    
+    // Create description
+    const durationText = duration === 7 ? '1 week' : duration === 14 ? '2 weeks' : '1 month';
+    const mealsText = mealsPerDay.map(m => m.charAt(0).toUpperCase() + m.slice(1)).join(', ');
+    const daysText = duration === 7 && daysPerWeek < 7 ? ` (${daysPerWeek} days/week)` : '';
+    const mealTypeText = mealType.charAt(0).toUpperCase() + mealType.slice(1);
+    
+    const description = `Custom ${mealTypeText} Plan - ${mealsText} for ${durationText}${daysText} (${totalMeals} meals)`;
+    
+    // Set selected plan
+    selectedPlan = {
+        plan_id: `custom_${mealType}_${duration}_${Date.now()}`,
+        amount: finalPrice * 100, // Convert to cents
+        description: description,
+        details: {
+            mealType: mealType,
+            duration: duration,
+            mealsPerDay: mealsPerDay,
+            daysPerWeek: daysPerWeek,
+            totalMeals: totalMeals,
+            specialRequests: specialRequests
+        }
+    };
+    
+    // Hide custom plan modal
+    const customModal = bootstrap.Modal.getInstance(document.getElementById('customPlanModal'));
+    customModal.hide();
+    
+    // Show payment modal after short delay
+    setTimeout(() => {
+        openPaymentModal();
+    }, 300);
+}
+
+// Handle subscribe button click
+function handleSubscribeClick(event) {
+    const button = event.currentTarget;
+    
+    selectedPlan = {
+        plan_id: button.getAttribute('data-plan-id'),
+        amount: parseInt(button.getAttribute('data-amount')),
+        description: button.getAttribute('data-description'),
+        details: null
+    };
+
+    openPaymentModal();
+}
+
+// Open payment modal
+function openPaymentModal() {
+    // Reset form
+    document.getElementById('customerForm').reset();
+    document.getElementById('customerDetailsSection').style.display = 'block';
+    document.getElementById('paymentSection').style.display = 'none';
+    hideAlert('customerAlert');
+    
+    // Show modal
+    const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    paymentModal.show();
+}
+
+// Handle customer form submit
+async function handleCustomerSubmit(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('customerName').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+
+    // Validation
+    if (!name || !email || !phone) {
+        showAlert('customerAlert', 'Please fill in all fields', 'danger');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        showAlert('customerAlert', 'Please enter a valid email address', 'danger');
+        return;
+    }
+
+    if (!isValidPhone(phone)) {
+        showAlert('customerAlert', 'Please enter a valid 10-digit phone number starting with 6-9', 'danger');
+        return;
+    }
+
+    customerDetails = { name, email, phone };
+
+    try {
+        showLoading();
+        
+        const response = await fetch('/api/create_payment_intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plan_id: selectedPlan.plan_id,
+                amount: selectedPlan.amount,
+                currency: 'INR',
+                description: selectedPlan.description,
+                customer: customerDetails,
+                planDetails: selectedPlan.details
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to create payment intent');
+        }
+
+        clientSecret = data.clientSecret;
+
+        // Switch to payment section
+        document.getElementById('customerDetailsSection').style.display = 'none';
+        document.getElementById('paymentSection').style.display = 'block';
+        document.getElementById('planDesc').textContent = selectedPlan.description;
+        document.getElementById('planAmount').textContent = `₹${(selectedPlan.amount/100).toLocaleString('en-IN')}`;
+        
+        // Mount card element if not already mounted
+        if (!cardElement._mounted) {
+            cardElement.mount('#card-element');
+            cardElement._mounted = true;
+        }
+
+        // Listen for card errors
+        cardElement.on('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        hideLoading();
+
+    } catch (error) {
+        console.error('Error:', error);
+        hideLoading();
+        showAlert('customerAlert', error.message, 'danger');
+    }
+}
+
+// Handle payment form submit
+async function handlePaymentSubmit(event) {
+    event.preventDefault();
+    
+    const submitButton = document.getElementById('submitPayment');
+    submitButton.disabled = true;
+    submitButton.classList.add('btn-loading');
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Payment...';
+
+    try {
+        const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: cardElement,
+                billing_details: {
+                    name: customerDetails.name,
+                    email: customerDetails.email,
+                    phone: customerDetails.phone
+                }
+            }
+        });
+
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+            submitButton.disabled = false;
+            submitButton.classList.remove('btn-loading');
+            submitButton.innerHTML = '<i class="fas fa-lock me-2"></i>Pay Securely Now';
+            return;
+        }
+
+        if (paymentIntent.status === 'succeeded') {
+            // Confirm payment on backend
+            await fetch('/api/confirm_payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    payment_intent_id: paymentIntent.id
+                })
+            });
+
+            // Hide payment modal
+            const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+            paymentModal.hide();
+            
+            // Show success message
+            showSuccessMessage();
+            
+            // Reset button
+            submitButton.disabled = false;
+            submitButton.classList.remove('btn-loading');
+            submitButton.innerHTML = '<i class="fas fa-lock me-2"></i>Pay Securely Now';
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
+        submitButton.disabled = false;
+        submitButton.classList.remove('btn-loading');
+        submitButton.innerHTML = '<i class="fas fa-lock me-2"></i>Pay Securely Now';
+    }
+}
+
+// Validation functions
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhone(phone) {
+    return /^[6-9]\d{9}$/.test(phone);
+}
+
+// Alert functions
+function showAlert(elementId, message, type) {
+    const alertDiv = document.getElementById(elementId);
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i>${message}`;
+    alertDiv.style.display = 'block';
+}
+
+function hideAlert(elementId) {
+    document.getElementById(elementId).style.display = 'none';
+}
+
+// Show success message
+function showSuccessMessage() {
+    const successHTML = `
+        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-5">
+                        <i class="fas fa-check-circle text-success success-icon" style="font-size: 5rem;"></i>
+                        <h3 class="mt-4 mb-3">Payment Successful!</h3>
+                        <p class="text-muted mb-4">Thank you for subscribing to <strong>${selectedPlan.description}</strong>.</p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-envelope me-2"></i>
+                            A confirmation email has been sent to <strong>${customerDetails.email}</strong>
+                        </div>
+                        <div class="alert alert-success">
+                            <i class="fas fa-phone me-2"></i>
+                            We'll contact you at <strong>${customerDetails.phone}</strong> for delivery details
+                        </div>
+                        <button type="button" class="btn btn-primary btn-lg mt-3" data-bs-dismiss="modal">
+                            <i class="fas fa-home me-2"></i>Back to Plans
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', successHTML);
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+    
+    document.getElementById('successModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+        resetCustomPlanForm();
+        
+        // Optionally redirect to home after a delay
+        // setTimeout(() => window.location.href = '/', 2000);
+    });
+}
+
+// Reset custom plan form
+function resetCustomPlanForm() {
+    customPlanState = {
+        mealType: null,
+        mealPrice: 0,
+        duration: 0,
+        durationMultiplier: 1,
+        mealsPerDay: [],
+        daysPerWeek: 7,
+        specialRequests: ''
+    };
+    
+    document.querySelectorAll('.meal-type-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.meal-checkbox').forEach(cb => cb.checked = false);
+    
+    const daysSlider = document.getElementById('daysSlider');
+    daysSlider.value = 7;
+    document.getElementById('daysValue').textContent = '7';
+    updateSliderBackground(daysSlider);
+    
+    document.getElementById('specialRequests').value = '';
+    document.getElementById('customPlanPrice').textContent = '₹0';
+    document.getElementById('customPlanDetails').textContent = 'Select options to see price';
+    document.getElementById('proceedCustomPlan').disabled = true;
+    document.getElementById('daysSliderContainer').style.display = 'none';
+}
+
+// Reset when custom plan modal is closed
+document.getElementById('customPlanModal').addEventListener('hidden.bs.modal', function() {
+    if (!document.getElementById('successModal')) {
+        resetCustomPlanForm();
+    }
+});
+
+// Animate customize button on load
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        const customizeBtn = document.querySelector('.customize-button');
+        if (customizeBtn) {
+            customizeBtn.style.animation = 'pulse 2s ease-in-out infinite';
+        }
+    }, 1000);
+});
+
+// Scroll animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.card').forEach(card => {
+    observer.observe(card);
+});
+</script>
+
 </body>
 </html>

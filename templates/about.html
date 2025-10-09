@@ -8,6 +8,11 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- In your HTML head section -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
@@ -54,16 +59,16 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="./index.html">Home</a>
+                <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="./about-us.html">About Us</a>
+                <a class="nav-link active" href="{{ url_for('about') }}">About Us</a>
               </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('features') }}">Features</a>
+              </li> -->
               <li class="nav-item">
-                <a class="nav-link" href="./features.html">Features</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./plans.html">Plans</a>
+                <a class="nav-link" href="{{ url_for('plans') }}">Plans</a>
               </li>
 
               <li class="nav-item call-us-nav-item">
@@ -177,7 +182,7 @@
               </div>
             </div>
             <div class="col-lg-6">
-              <img src="images/about-us-page-img.png" class="sub-banner-img">
+              <img src=" {{ url_for('static', filename='images/about-us-page-img.png') }}" class="sub-banner-img">
             </div>
           </div>
         </div>
@@ -383,44 +388,6 @@
                     <span class="phone-icon"><img src="images/callus.png" alt=""></span>9999999999
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="quicklinks">
-                <h3 class="quick-links-head">Quick Links</h3>
-                <ul class="quick-links">
-                  <li>
-                    <a class="nav-link" aria-current="page" href="./index.html">Home</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" href="./about-us.html">About Us</a>
-                  </li>
-                  <li>
-                    <a class="nav-link" href="./features.html">Features</a>
-                  </li>
-                  <li><a class="nav-link" href="./plans.html">Plans</a></li>
-                  <li>
-                    <a class="nav-link active" >Privacy Policy</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active">Cancellation Policy</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" >Terms & Condition</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" >Shipping & Delivery Policy</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" >Support</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" >Contact Us</a>
-                  </li>
-                  <li>
-                    <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#complaintModal">Complaint</a>
-                  </li>
-                </ul>
               </div>
             </div>
             <div class="col-6 col-lg-3">

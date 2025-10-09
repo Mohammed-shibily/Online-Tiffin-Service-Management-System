@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - MealCloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: scaleIn 0.5s ease-in-out;
+        }
+
+        .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .detail-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .email-notice {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="checkmark"></div>
+        <h1>Payment Successful!</h1>
+        <p class="message">
+            Thank you for subscribing to MealCloud. Your payment has been processed successfully.
+        </p>
+
+        <div class="detail-box">
+            <div class="detail-row">
+                <span>Plan:</span>
+                <span id="plan-name">-</span>
+            </div>
+            <div class="detail-row">
+                <span>Amount Paid:</span>
+                <span id="amount">-</span>
+            </div>
+        </div>
+
+        <a href="/" class="btn">Back to Home</a>
+        <a href="/plans" class="btn btn-secondary">View More Plans</a>
+
+        <p class="email-notice">
+            📧 A confirmation email has been sent to your registered email address.
+        </p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('plan');
+        const amount = urlParams.get('amount');
+
+        const planNames = {
+            'basic-monthly': 'Basic Monthly Plan',
+            'standard-monthly': 'Standard Monthly Plan',
+            'premium-monthly': 'Premium Monthly Plan',
+            'basic-weekly': 'Basic Weekly Plan',
+            'standard-weekly': 'Standard Weekly Plan',
+            'premium-weekly': 'Premium Weekly Plan'
+        };
+
+        document.getElementById('plan-name').textContent = planNames[plan] || 'Subscription Plan';
+        document.getElementById('amount').textContent = amount || '₹0';
+    </script>
+</body>
+</html>
