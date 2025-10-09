@@ -1,0 +1,553 @@
+<!DOCTYPE html><html lang="eng"><head>
+    <title>Features</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/all.min.css">
+    <!-- In your HTML head section -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      $(document).ready(function () {
+        // $('#exampleModal').on('shown.bs.modal', function () {
+        //     $('#vid2')[0].play();
+        // })
+        // $('#exampleModal').on('hidden.bs.modal', function () {
+        //     $('#vid2')[0].pause();
+        // })
+        document.getElementById("vid2").pause();
+
+        // Get the modal
+        var modal = document.getElementById("exampleModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("btn_vid");
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+          modal.style.display = "block";
+          document.getElementById("vid2").play(); // <-- PLAY
+        };
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+            document.getElementById("vid2").pause(); // <-- PAUSE
+          }
+        };
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid main-header-special">
+      <nav class="py-2 navbar navbar-expand-lg auto-hiding-navbar">
+        <div class="container">
+          <a class="navbar-brand" href="./index.html">
+            <!-- <img class="logo" src="images/-logo-300x300.svg"> -->
+          </a>
+          <button class="navbar-toggler text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="./index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./about-us.html">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="./features.html">Features</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./plans.html">Plans</a>
+              </li>
+
+              <li class="nav-item call-us-nav-item">
+                <a href="tel: 9946 66 0012" class="download-button"><i class="fa-solid fa-phone"></i>Call Us</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div id="complaintModal" class="modal fade" role="dialog" aria-labelledby="complaintModalLongTitle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Register Your Complaint</h4>
+              <button type="button" class="close" style="border: none; background: none; font-size: 32px" data-bs-dismiss="modal" aria-label="Close" id="closeId">
+                <span aria-hidden="true">�</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="form">
+                <div class="form-group">
+                  <input type="text" name="Name" class="form-control" placeholder="Name" id="nameId">
+                </div>
+                <div class="form-group" style="padding-top: 10px">
+                  <input type="number" name="Phone" class="form-control" placeholder="Phone Number" id="phoneId">
+                </div>
+
+                <div class="form-group" style="padding-top: 10px">
+                  <input type="text" name="Place" class="form-control" style="padding-top: 5px" placeholder="Place" id="placeId">
+                </div>
+
+                <div class="form-group" style="padding-top: 10px">
+                  <select name="Category" id="category" class="form-control">
+                    <option value="" disabled="" selected="">Food Type</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">inner</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px">
+                  <select name="Complaint" id="complaint" class="form-control">
+                    <option value="" disabled="" selected="">Complaint Type</option>
+                    <option value="Delivery">Delivery Issue</option>
+                    <option value="Food">Food Related Issue</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px">
+                  <textarea type="text" name="Description" class="form-control" placeholder="Description" id="descId"></textarea>
+                </div>
+
+                <div class="form-group" style="visibility: hidden">
+                  <select name="Status" id="status" class="form-control" vi="">
+                    <option value="New">New</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit">
+                  Submit
+                </button>
+                <p id="SuccessMessage" style="font-size: 14px; color: green; font-weight: bold"></p>
+                <p id="AlertMessage" style="
+                    font-size: 14px;
+                    color: rgb(204, 47, 66);
+                    font-weight: bold;
+                  "></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="banner">
+      <div class="aboutus-sub-banner">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-5 about-banner-text">
+              <div class="d-table h-100 py-3">
+                <div class="d-table-cell align-middle">
+                  <!-- <h4 class="banner-text-sub">#1 TIFFIN App</h4> -->
+                  <h3 class="banner-text-main">We Promise To</h3>
+                  <h3 class="banner-text-main-head">Deliver On Time</h3>
+                  <p class="banner-text-info">
+                    Pre Register to get Amazing Discounts when launched!
+                  </p>
+                  <button class="register-button">Register Now!</button>
+                  <!-- <button type="button" class="video-button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn_vid"> -->
+                    <!-- <i class="fa-solid fa-video"></i> About  -->
+                  </button>
+                  <button type="button" class="video-button" data-bs-toggle="modal" data-bs-target="#complaintModal" id="btn_complaint">
+                    <i class="fa-solid fa-user-pen" style="padding-right: 5px"></i>Complaint
+                  </button>
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <video width="100%" id="vid2" height="100%" controls="" autoplay="">
+                            <!-- <source src="media/mess%20wala-1080p-221118.mp4" type="video/mp4"> -->
+                          </video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <img src="images/features-img.png" class="sub-banner-img">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="whychooseus">
+      <div class="container why-choose-us">
+        <div class="why-choose-us-text">
+          <h3>
+            <span class="why-choose-us-head">Why</span>
+            <span class="why-choose-us-head-bold">Choose Us</span>
+          </h3>
+          <h6 class="why-choose-us-sub-head">
+            The best food for you at affordable prices
+          </h6>
+        </div>
+        <div class="why-choose-us-content">
+          <div class="row why-choose-us-content-row-1">
+            <div class="col-lg-4">
+              <img src="images/feature-img-1.png">
+              <h3 class="why-choose-item-name">Personalized Plan</h3>
+              <p class="why-choose-item-desc">
+                With our wide Menu and Affordable prices, you can personalize
+                your order.
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <img src="images/feature-img-2.png">
+              <h3 class="why-choose-item-name">Free and on-time Delivery</h3>
+              <p class="why-choose-item-desc">
+                Free delivery services at your doorstep. Choose the time and
+                place of your food delivery.
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <img src="images/feature-img-3.png">
+              <h3 class="why-choose-item-name">Hygienic and Safe Packaging</h3>
+              <p class="why-choose-item-desc">
+                Each food item will have proper packaging to secure the delicacy
+                of the food.
+              </p>
+            </div>
+          </div>
+          <div class="row why-choose-us-content-row-2">
+            <div class="col-lg-4">
+              <img src="images/feature-img-4.png">
+              <h3 class="why-choose-item-name">Add-ons Facility</h3>
+              <p class="why-choose-item-desc">
+                With mealcloud monthly subscription, add delicious dishes to
+                the main menu, as per mood.
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <img src="images/feature-img-5.png">
+              <h3 class="why-choose-item-name">Meals for the Day</h3>
+              <p class="why-choose-item-desc">
+                A single stop for your daily food requirements.
+              </p>
+            </div>
+            <div class="col-lg-4">
+              <img src="images/feature-img-6.png">
+              <h3 class="why-choose-item-name">Easy Regulation with App</h3>
+              <p class="why-choose-item-desc">
+                Track your orders and subscription with our easy-to-use mobile
+                app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="ourplan">
+      <div class="container our-plan">
+        <div class="our-plan-text">
+          <h3 class="about-us-head">Our</h3>
+          <h3 class="about-us-sub-head">Food Plan</h3>
+        </div>
+        <div class="row food-plan-row-1">
+          <div class="col-lg-6 food-plan-1">
+            <div class="food-plan-details">
+              <h3 class="food-plan-rate">999</h3>
+              <h3 class="food-plan-month">Per Week</h3>
+              <ul class="food-plan-ul">
+                <li>7 veg days</li>
+                <li>For vegetarians</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6 food-plan-2">
+            <div class="food-plan-details">
+              <h3 class="food-plan-rate">2,999</h3>
+              <h3 class="food-plan-month">Per Week</h3>
+              <ul class="food-plan-ul">
+                <li>4 veg days</li>
+                <li>3 nonveg days</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row food-plan-row-2">
+          <div class="col-lg-6 food-plan-3">
+            <div class="food-plan-details">
+              <h3 class="food-plan-rate">3,999</h3>
+              <h3 class="food-plan-month">Per Month</h3>
+              <ul class="food-plan-ul">
+                <li>30 veg days</li>
+                <li>For vegetarians</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6 food-plan-4">
+            <div class="food-plan-details">
+              <h3 class="food-plan-rate">5,999</h3>
+              <h3 class="food-plan-month">Per Month</h3>
+              <ul class="food-plan-ul">
+                <li>30 Non days</li>
+                <li>Other Plans</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- <section class="foodcategories">
+      <div class="container food-categories">
+        <div class="food-categories-text">
+          <h3 class="about-us-sub-head">
+            <span class="about-us-head">Food</span> Categories
+          </h3>
+        </div>
+        <div class="food-categories-content">
+          <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Break fast<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Lunch<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Dinner<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Snacks<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Juices<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="food-category">
+                <div class="food-category-name">
+                  Beverages<i class="fa-regular fa-circle-right category-icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <section class="mobileapp">
+      <div class="mobile-app">
+        <div class="container">
+          <div class="mobile-app-text">
+            <h3 class="mobile-app-main-head">MEALCLOUD</h3>
+            <h3 class="mobile-app-head">We Care for Your Nutrition.</h3>
+            <h3 class="mobile-app-sub-head">Just like your Mother.</h3>
+            <p class="mobile-app-desc">
+              Say no to untimely eating schedule with MealCloud’s scheduled and
+              healthy food delivery
+            </p>
+            <button class="mobile-app-button">
+              <i class="fa fa-circle-arrow-down"></i>Download App
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="tensionfree">
+      <div class="container tension-free">
+        <div class="row tension-free-content">
+          <div class="col-lg-5 tension-free-text">
+            <h3 class="tension-free-head">BE TENSION FREE!</h3>
+            <h5 class="tension-free-sub-head">On-Time Delivery</h5>
+            <p class="tension-free-desc">
+              You have an option to edit the delivery time that suits your
+              schedule. Our fast delivery system will take care of all your
+              need.
+            </p>
+            <ul class="tension-free-ul">
+              <li>Free Delivery</li>
+              <li>Well Wrapped</li>
+              <li>Choose Your Delivery Time</li>
+            </ul>
+          </div>
+          <div class="col-lg-7 tension-free-img">
+            <img src="images/be-tension-free-img.png">
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="footer">
+      <div class="container">
+        <div class="footer-box">
+          <div class="row footer-social">
+            <div class="col-lg-6">
+              <div class="connected">
+                <div class="social-icons">
+                  <span class="social-icons-head">Stay Connected</span>
+                  <a href=""><i class="fa-brands fa-facebook-f"></i></a>
+                  <a href=""><i class="fab fa-twitter"></i></a>
+                  <a target="_blank" href="https://www.instagram.com/mealcloud/?igshid=YWJhMjlhZTc%3D"><i class="fab fa-instagram"></i></a>
+                  <a href=""><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 subscribe-container">
+              <input type="text" placeholder="Name">
+              <input type="number" placeholder="Mobile">
+              <button>
+                Subscribe <i class="fa-regular fa-circle-right"></i>
+              </button>
+            </div>
+          </div>
+          <div class="row footer-address">
+            <div class="col-lg-6">
+              <div class="address d-flex text-white">
+                <!-- <img src="images/.svg" height="125px"> -->
+                <div class="mx-4">
+                  <h4>Enjoy your</h4>
+                  <h4 class="text-yellow mb-4">Delicious Food</h4>
+                  <div class="contact-text">
+                    <span class="mail-icon"><i class="fa-solid fa-envelope"></i></span>support@mealcloud.com
+                  </div>
+                  <div class="contact-text">
+                    <span class="phone-icon"><img src="images/callus.png" alt=""></span>999999999
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="quicklinks">
+                <h3 class="quick-links-head">Quick Links</h3>
+                <ul class="quick-links">
+                  <li>
+                    <a class="nav-link" aria-current="page" href="./index.html">Home</a>
+                  </li>
+                  <li>
+                    <a class="nav-link" href="./about-us.html">About Us</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" href="./features.html">Features</a>
+                  </li>
+                  <li><a class="nav-link" href="./plans.html">Plans</a></li>
+                  <li>
+                    <a class="nav-link active" >Privacy Policy</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" >Cancellation Policy</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" >Terms & Condition</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" >Shipping & Delivery Policy</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" >Support</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" ">Contact Us</a>
+                  </li>
+                  <li>
+                    <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#complaintModal">Complaint</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="features">
+                <h3 class="features-head">Features</h3>
+                <ul>
+                  <li>Personalized Plan</li>
+                  <li>Free and on-time Delivery</li>
+                  <li>Hygienic and Safe Packaging</li>
+                  <li>Add-ons Facility</li>
+                  <li>Meals for the Day</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          <div>Copyright � 2025. mealcloud. All rights reserved.</div>
+          <!-- <div>
+                        Designed by LogicSky.
+                    </div> -->
+        </div>
+      </div>
+    </section>
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyTbHfT7rVTcCpF6NiH0Wo66vyEXAXvj1uXJpeK6HfWv44wIiQ-jog2SUVNI15zG7Gfgg/exec";
+      const form = document.querySelector("#form");
+      const btn = document.querySelector("#submit");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (
+          $("#nameId").val() === "" ||
+          $("#phoneId").val() === "" ||
+          $("#placeId").val() === "" ||
+          $("#descId").val() === "" ||
+          $("#category").val() === "" ||
+          $("#complaint").val() === ""
+        ) {
+          AlertMessage.innerHTML = "Please fill the fields";
+          return false;
+        } else {
+          // e.preventDefault();
+          AlertMessage.innerHTML = "";
+          btn.disabled = true;
+          btn.innerHTML = "Loading...";
+
+          fetch(scriptURL, { method: "POST", body: new FormData(form) })
+            .then((response) => {
+              btn.disabled = false;
+              btn.innerHTML = "Submit";
+
+              $("#nameId").val("");
+              $("#phoneId").val("");
+              $("#placeId").val("");
+              $("#descId").val("");
+              $("#category").val("");
+              $("#complaint").val("");
+
+              SuccessMessage.innerHTML =
+                "Complaint registered successfully. We will contact you soon....";
+
+              setTimeout(function () {
+                SuccessMessage.innerHTML = "";
+                AlertMessage.innerHTML = "";
+                $("#complaintModal").modal("hide");
+              }, 2000); // milliseconds
+            })
+            .catch((error) => {
+              btn.disabled = false;
+              btn.innerHTML = "Submit";
+              alert("Error!", error.message);
+            });
+        }
+      });
+    </script>
+  
+<script>'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'},{'ap':'cpsh-oh'},{'server':'sg2plzcpnl466812'},{'dcenter':'sg2'},{'cp_id':'9893880'},{'cp_cl':'8'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src="js/scc-c2.min.js"></script>
+</body></html>
